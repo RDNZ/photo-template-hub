@@ -7,50 +7,60 @@ import { supabase } from "@/integrations/supabase/client";
 const Index = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let mounted = true;
 
     const checkAuth = async () => {
       try {
-        console.log("Checking auth status...");
-        const { data: { session } } = await supabase.auth.getSession();
+        console.log("Starting auth check...");
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
         
-        if (!mounted) return;
+        if (sessionError) {
+          console.error("Session error:", sessionError);
+          throw sessionError;
+        }
+
+        if (!mounted) {
+          console.log("Component unmounted, stopping auth check");
+          return;
+        }
 
         if (session) {
-          console.log("Session found, checking user role...");
-          const { data: profile, error } = await supabase
+          console.log("Session found, fetching profile...");
+          const { data: profile, error: profileError } = await supabase
             .from("profiles")
             .select("role")
             .eq("id", session.user.id)
             .single();
 
-          if (error) {
-            console.error("Error fetching profile:", error);
+          if (profileError) {
+            console.error("Profile fetch error:", profileError);
+            setError("Error fetching user profile");
             setIsLoading(false);
             return;
           }
 
+          console.log("Profile found:", profile);
           if (profile?.role === "admin") {
-            console.log("Admin user, redirecting to dashboard");
+            console.log("Redirecting to admin dashboard");
             navigate("/dashboard");
           } else if (profile?.role === "client") {
-            console.log("Client user, redirecting to client dashboard");
+            console.log("Redirecting to client dashboard");
             navigate("/client-dashboard");
           } else {
-            console.log("No role found for user");
+            console.log("No role found, showing auth UI");
             setIsLoading(false);
           }
         } else {
-          console.log("No session found");
+          console.log("No session found, showing auth UI");
           setIsLoading(false);
         }
       } catch (error) {
-        console.error("Error checking auth:", error);
-        if (mounted) {
-          setIsLoading(false);
-        }
+        console.error("Auth check error:", error);
+        setError(error instanceof Error ? error.message : "An error occurred");
+        setIsLoading(false);
       }
     };
 
@@ -59,18 +69,22 @@ const Index = () => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log("Auth state changed:", event);
       
-      if (!mounted) return;
+      if (!mounted) {
+        console.log("Component unmounted, ignoring auth state change");
+        return;
+      }
 
       if (event === 'SIGNED_IN' && session) {
-        console.log("User signed in, checking role...");
-        const { data: profile, error } = await supabase
+        console.log("User signed in, fetching profile...");
+        const { data: profile, error: profileError } = await supabase
           .from("profiles")
           .select("role")
           .eq("id", session.user.id)
           .single();
 
-        if (error) {
-          console.error("Error fetching profile:", error);
+        if (profileError) {
+          console.error("Profile fetch error:", profileError);
+          setError("Error fetching user profile");
           setIsLoading(false);
           return;
         }
@@ -93,6 +107,22 @@ const Index = () => {
       subscription.unsubscribe();
     };
   }, [navigate]);
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="max-w-md w-full p-8 bg-white rounded-lg shadow-lg">
+          <div className="text-red-600 mb-4">Error: {error}</div>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="w-full bg-gray-900 text-white py-2 rounded hover:bg-gray-800"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (
