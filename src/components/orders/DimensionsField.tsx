@@ -29,6 +29,14 @@ const getDimensionOptions = (softwareType: string) => {
         { value: "2x6_strip", label: "2x6 (Strip)" },
         { value: "5x7_other", label: "5x7 (Other)" },
       ];
+    case "touchpix":
+      return [
+        { value: "1072x1920", label: "1072x1920px" },
+        { value: "1072x1440", label: "1072x1440px" },
+        { value: "1072x1072", label: "1072x1072px" },
+        { value: "1440x1072", label: "1440x1072px" },
+        { value: "1920x1072", label: "1920x1072px" },
+      ];
     default:
       return null;
   }
