@@ -31,6 +31,7 @@ const Dashboard = () => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
+        console.log("No session found");
         navigate("/");
         return;
       }
@@ -42,9 +43,25 @@ const Dashboard = () => {
         .eq("id", session.user.id)
         .single();
 
-      if (profile?.role !== "admin") {
+      if (!profile) {
+        console.log("No profile found");
         navigate("/");
+        return;
       }
+
+      if (profile.role === 'client') {
+        console.log("Client user detected, redirecting to client dashboard");
+        navigate("/client-dashboard");
+        return;
+      }
+
+      if (profile.role !== "admin") {
+        console.log("User is not an admin");
+        navigate("/");
+        return;
+      }
+
+      console.log("Admin access confirmed");
     };
 
     checkAuth();

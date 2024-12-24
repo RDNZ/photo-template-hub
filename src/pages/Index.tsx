@@ -8,13 +8,49 @@ const Index = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (session) {
+        // Check user role and redirect accordingly
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("role")
+          .eq("id", session.user.id)
+          .single();
+
+        if (profile?.role === "admin") {
+          navigate("/dashboard");
+        } else if (profile?.role === "client") {
+          navigate("/client-dashboard");
+        }
+      }
+    };
+
     // Check current auth status
-    supabase.auth.onAuthStateChange((event, session) => {
+    checkAuth();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log("Auth state changed:", event);
       if (session) {
-        navigate("/dashboard");
+        // Check user role and redirect accordingly
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("role")
+          .eq("id", session.user.id)
+          .single();
+
+        if (profile?.role === "admin") {
+          navigate("/dashboard");
+        } else if (profile?.role === "client") {
+          navigate("/client-dashboard");
+        }
       }
     });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, [navigate]);
 
   return (

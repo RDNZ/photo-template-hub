@@ -31,9 +31,25 @@ const ClientDashboard = () => {
         .eq("id", session.user.id)
         .single();
 
-      if (profile?.role !== "client") {
+      if (!profile) {
+        console.log("No profile found");
         navigate("/");
+        return;
       }
+
+      if (profile.role === 'admin') {
+        console.log("Admin user detected, redirecting to admin dashboard");
+        navigate("/dashboard");
+        return;
+      }
+
+      if (profile.role !== "client") {
+        console.log("User is not a client");
+        navigate("/");
+        return;
+      }
+
+      console.log("Client access confirmed");
     };
 
     checkAuth();
