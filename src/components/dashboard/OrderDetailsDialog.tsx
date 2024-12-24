@@ -21,10 +21,12 @@ export const OrderDetailsDialog = ({ order, isOpen, onClose }: OrderDetailsDialo
 
   useEffect(() => {
     const loadImages = async () => {
-      if (!order?.reference_images?.length) return;
+      // Check if reference_images exists and is an array
+      const referenceImages = order?.reference_images as any[] | null;
+      if (!referenceImages || !Array.isArray(referenceImages) || referenceImages.length === 0) return;
       
       const urls = await Promise.all(
-        (order.reference_images as any[]).map(async (image) => {
+        referenceImages.map(async (image) => {
           const { data } = supabase.storage
             .from('reference_images')
             .getPublicUrl(image.path);
