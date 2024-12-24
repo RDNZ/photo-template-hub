@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
@@ -11,6 +11,8 @@ import { SoftwareTypeField } from "./SoftwareTypeField";
 import { DimensionsField } from "./DimensionsField";
 import { TurnaroundTimeField } from "./TurnaroundTimeField";
 import { DetailsField } from "./DetailsField";
+import { DarkroomFileField } from "./DarkroomFileField";
+import { calculateOrderPrice } from "@/lib/utils/priceCalculator";
 
 interface OrderFormProps {
   onSubmit: (values: OrderFormValues) => void;
@@ -28,10 +30,18 @@ export const OrderForm = ({ onSubmit, isSubmitting, onCancel }: OrderFormProps) 
       turnaround_time: "",
       details: "",
       email: "",
+      darkroom_file: false,
     },
   });
 
   const softwareType = form.watch("software_type");
+  const turnaroundTime = form.watch("turnaround_time");
+  const darkroomFile = form.watch("darkroom_file");
+
+  const totalPrice = useMemo(() => {
+    if (!softwareType || !turnaroundTime) return 0;
+    return calculateOrderPrice(softwareType, turnaroundTime, darkroomFile);
+  }, [softwareType, turnaroundTime, darkroomFile]);
 
   useEffect(() => {
     const loadUserProfile = async () => {
@@ -52,9 +62,24 @@ export const OrderForm = ({ onSubmit, isSubmitting, onCancel }: OrderFormProps) 
     loadUserProfile();
   }, [form]);
 
+  const handleCheckout = async (values: OrderFormValues) => {
+    try {
+      const response = await supabase.functions.invoke('create-checkout', {
+        body: { ...values, price: totalPrice }
+      });
+
+      if (response.error) throw response.error;
+
+      // Redirect to Stripe Checkout
+      window.location.href = response.data.url;
+    } catch (error) {
+      console.error('Error creating checkout session:', error);
+    }
+  };
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(handleCheckout)} className="space-y-6">
         <EmailField form={form} />
         <EventNameField form={form} />
         <SoftwareTypeField form={form} />
@@ -63,6 +88,14 @@ export const OrderForm = ({ onSubmit, isSubmitting, onCancel }: OrderFormProps) 
         </div>
         <DetailsField form={form} />
         <TurnaroundTimeField form={form} />
+        <DarkroomFileField form={form} />
+
+        <div className="mt-6 rounded-lg bg-gray-50 px-4 py-3">
+          <div className="flex items-center justify-between">
+            <span className="text-lg font-medium">Total Price:</span>
+            <span className="text-lg font-bold">${totalPrice}</span>
+          </div>
+        </div>
 
         <div className="flex justify-between">
           <Button
@@ -72,8 +105,8 @@ export const OrderForm = ({ onSubmit, isSubmitting, onCancel }: OrderFormProps) 
           >
             Cancel
           </Button>
-          <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Submitting..." : "Submit Order"}
+          <Button type="submit" disabled={isSubmitting || totalPrice === 0}>
+            {isSubmitting ? "Processing..." : "Proceed to Checkout"}
           </Button>
         </div>
       </form>

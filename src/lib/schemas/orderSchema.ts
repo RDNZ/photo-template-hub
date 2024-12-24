@@ -7,11 +7,11 @@ export const orderFormSchema = z.object({
   turnaround_time: z.string().min(1, "Turnaround time is required"),
   details: z.string().optional(),
   email: z.string().email("Invalid email address"),
+  darkroom_file: z.boolean().default(false),
 });
 
 export type OrderFormValues = z.infer<typeof orderFormSchema>;
 
-// Type for the complete order data that matches Supabase schema
 export type OrderData = {
   event_name: string;
   software_type: string;
@@ -25,4 +25,5 @@ export type OrderData = {
   final_file?: string;
   created_at?: string;
   updated_at?: string;
+  darkroom_file: boolean;
 };

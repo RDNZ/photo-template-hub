@@ -34,9 +34,10 @@ export const TurnaroundTimeField = ({ form }: TurnaroundTimeFieldProps) => {
               </SelectTrigger>
             </FormControl>
             <SelectContent>
-              <SelectItem value="24h">24 Hours (+50%)</SelectItem>
-              <SelectItem value="48h">48 Hours (+25%)</SelectItem>
-              <SelectItem value="72h">72 Hours (Standard)</SelectItem>
+              <SelectItem value="3d">3 Day Turnaround - $15</SelectItem>
+              <SelectItem value="2d">2 Day Turnaround - $20</SelectItem>
+              <SelectItem value="1d">1 Day Turnaround - $25</SelectItem>
+              <SelectItem value="12h">12 Hour Turnaround - $30</SelectItem>
             </SelectContent>
           </Select>
           <FormMessage />

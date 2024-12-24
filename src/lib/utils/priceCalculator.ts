@@ -1,27 +1,33 @@
-export const calculateOrderPrice = (softwareType: string, turnaroundTime: string): number => {
-  let basePrice = 0;
-  
-  switch (softwareType) {
-    case "photoshop":
-      basePrice = 50;
+export const calculateOrderPrice = (
+  softwareType: string,
+  turnaroundTime: string,
+  hasDarkroomFile: boolean = false
+): number => {
+  // Base price for all orders
+  let basePrice = 15;
+
+  // Add turnaround time fee
+  switch (turnaroundTime) {
+    case "3d":
+      basePrice += 15;
       break;
-    case "illustrator":
-      basePrice = 75;
+    case "2d":
+      basePrice += 20;
       break;
-    case "after_effects":
-      basePrice = 100;
+    case "1d":
+      basePrice += 25;
+      break;
+    case "12h":
+      basePrice += 30;
       break;
     default:
-      basePrice = 50;
+      basePrice += 15; // Default to 3-day turnaround
   }
 
-  // Add rush fee for faster turnaround
-  switch (turnaroundTime) {
-    case "24h":
-      return Math.round(basePrice * 1.5);
-    case "48h":
-      return Math.round(basePrice * 1.25);
-    default:
-      return basePrice;
+  // Add darkroom file fee if applicable
+  if (softwareType === "darkroom_booth_3" && hasDarkroomFile) {
+    basePrice += 10;
   }
+
+  return basePrice;
 };
