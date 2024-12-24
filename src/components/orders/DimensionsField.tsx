@@ -37,6 +37,24 @@ const getDimensionOptions = (softwareType: string) => {
         { value: "1440x1072", label: "1440x1072px" },
         { value: "1920x1072", label: "1920x1072px" },
       ];
+    case "revospin_360":
+      return [
+        { value: "1080x1918", label: "Portrait - 1080px x 1918px" },
+        { value: "1918x1080", label: "Landscape - 1918px x 1080px" },
+        { value: "1080x1080", label: "Square - 1080px x 1080px" },
+      ];
+    case "spinner_360":
+      return [
+        { value: "1920x1080", label: "16:9 - 1920 x 1080px" },
+        { value: "1080x1080", label: "1:1 - 1080 x 1080px" },
+      ];
+    case "dslr_booth":
+      return [
+        { value: "6x4_horizontal", label: "6x4 (Horizontal)" },
+        { value: "4x6_vertical", label: "4x6 (Vertical)" },
+        { value: "2x6_strip", label: "2x6 (Strip)" },
+        { value: "square", label: "Square" },
+      ];
     default:
       return null;
   }
