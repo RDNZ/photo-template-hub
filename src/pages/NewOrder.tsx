@@ -51,6 +51,7 @@ const NewOrder = () => {
         price,
         user_id: session.user.id,
         darkroom_file: values.darkroom_file,
+        photo_boxes: values.photo_boxes,
       };
 
       const { error } = await supabase.from("orders").insert(orderData);
