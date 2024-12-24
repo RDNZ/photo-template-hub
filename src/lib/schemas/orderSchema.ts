@@ -4,7 +4,9 @@ export const orderFormSchema = z.object({
   event_name: z.string().min(1, "Event name is required"),
   software_type: z.string().min(1, "Software type is required"),
   dimensions: z.string().min(1, "Dimensions are required"),
-  turnaround_time: z.string().min(1, "Turnaround time is required"),
+  turnaround_time: z.enum(["3d", "2d", "1d", "12h"], {
+    required_error: "Turnaround time is required",
+  }),
   details: z.string().optional(),
   email: z.string().email("Invalid email address"),
   darkroom_file: z.boolean().default(false),
