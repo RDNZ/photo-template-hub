@@ -18,12 +18,18 @@ export const createCheckoutSession = async (
     throw new Error("Order ID is required for checkout");
   }
 
+  // Get the current window location to construct proper URLs
+  const baseUrl = window.location.origin;
+  console.log("Base URL for checkout:", baseUrl);
+
   const { data, error } = await supabase.functions.invoke('create-checkout', {
     body: { 
       price: totalPrice,
       email,
       event_name: values.event_name,
-      order_id: orderId
+      order_id: orderId,
+      success_url: `${baseUrl}/client-dashboard?success=true&order_id=${orderId}`,
+      cancel_url: `${baseUrl}/client-dashboard?canceled=true&order_id=${orderId}`
     }
   });
 
@@ -41,6 +47,6 @@ export const createCheckoutSession = async (
     throw new Error("Invalid checkout session response");
   }
 
-  console.log("Checkout session created successfully");
+  console.log("Checkout session created successfully, redirecting to:", data.url);
   return data.url;
 };
