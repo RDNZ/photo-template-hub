@@ -55,6 +55,11 @@ const getDimensionOptions = (softwareType: string) => {
         { value: "2x6_strip", label: "2x6 (Strip)" },
         { value: "square", label: "Square" },
       ];
+    case "amazebooth":
+      return [
+        { value: "1220x1820", label: "Landscape: 1220x1820" },
+        { value: "1820x1220", label: "Portrait: 1820x1220" },
+      ];
     default:
       return null;
   }
