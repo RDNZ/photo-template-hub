@@ -9,18 +9,28 @@ const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    let mounted = true;
+
     const checkAuth = async () => {
       try {
         console.log("Checking auth status...");
         const { data: { session } } = await supabase.auth.getSession();
         
+        if (!mounted) return;
+
         if (session) {
           console.log("Session found, checking user role...");
-          const { data: profile } = await supabase
+          const { data: profile, error } = await supabase
             .from("profiles")
             .select("role")
             .eq("id", session.user.id)
             .single();
+
+          if (error) {
+            console.error("Error fetching profile:", error);
+            setIsLoading(false);
+            return;
+          }
 
           if (profile?.role === "admin") {
             console.log("Admin user, redirecting to dashboard");
@@ -38,28 +48,39 @@ const Index = () => {
         }
       } catch (error) {
         console.error("Error checking auth:", error);
-        setIsLoading(false);
+        if (mounted) {
+          setIsLoading(false);
+        }
       }
     };
 
-    // Check current auth status
     checkAuth();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log("Auth state changed:", event);
       
+      if (!mounted) return;
+
       if (event === 'SIGNED_IN' && session) {
         console.log("User signed in, checking role...");
-        const { data: profile } = await supabase
+        const { data: profile, error } = await supabase
           .from("profiles")
           .select("role")
           .eq("id", session.user.id)
           .single();
 
+        if (error) {
+          console.error("Error fetching profile:", error);
+          setIsLoading(false);
+          return;
+        }
+
         if (profile?.role === "admin") {
           navigate("/dashboard");
         } else if (profile?.role === "client") {
           navigate("/client-dashboard");
+        } else {
+          setIsLoading(false);
         }
       } else if (event === 'SIGNED_OUT') {
         console.log("User signed out");
@@ -68,6 +89,7 @@ const Index = () => {
     });
 
     return () => {
+      mounted = false;
       subscription.unsubscribe();
     };
   }, [navigate]);
