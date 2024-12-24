@@ -7,6 +7,7 @@ import { StrictMode } from "react";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import ClientDashboard from "./pages/ClientDashboard";
+import NewOrder from "./pages/NewOrder";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -28,6 +29,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/client-dashboard" element={<ClientDashboard />} />
+            <Route path="/new-order" element={<NewOrder />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
