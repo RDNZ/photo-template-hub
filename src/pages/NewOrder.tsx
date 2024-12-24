@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -22,13 +21,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-
-const formSchema = z.object({
-  event_name: z.string().min(1, "Event name is required"),
-  software_type: z.string().min(1, "Software type is required"),
-  dimensions: z.string().min(1, "Dimensions are required"),
-  turnaround_time: z.string().min(1, "Turnaround time is required"),
-});
+import { orderFormSchema, type OrderFormValues } from "@/lib/schemas/orderSchema";
+import { calculateOrderPrice } from "@/lib/utils/priceCalculator";
 
 const NewOrder = () => {
   const navigate = useNavigate();
@@ -36,7 +30,7 @@ const NewOrder = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Check if user is authenticated and is a client
-  useState(() => {
+  useEffect(() => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
@@ -58,8 +52,8 @@ const NewOrder = () => {
     checkAuth();
   }, [navigate]);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<OrderFormValues>({
+    resolver: zodResolver(orderFormSchema),
     defaultValues: {
       event_name: "",
       software_type: "",
@@ -68,35 +62,20 @@ const NewOrder = () => {
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: OrderFormValues) => {
     setIsSubmitting(true);
     try {
-      // Calculate price based on software type and turnaround time
-      let price = 0;
-      switch (values.software_type) {
-        case "photoshop":
-          price = 50;
-          break;
-        case "illustrator":
-          price = 75;
-          break;
-        case "after_effects":
-          price = 100;
-          break;
-        default:
-          price = 50;
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        throw new Error("Not authenticated");
       }
 
-      // Add rush fee for faster turnaround
-      if (values.turnaround_time === "24h") {
-        price *= 1.5;
-      } else if (values.turnaround_time === "48h") {
-        price *= 1.25;
-      }
+      const price = calculateOrderPrice(values.software_type, values.turnaround_time);
 
       const { error } = await supabase.from("orders").insert({
         ...values,
         price,
+        user_id: session.user.id,
       });
 
       if (error) throw error;
