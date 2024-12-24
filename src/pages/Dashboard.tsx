@@ -26,7 +26,6 @@ const Dashboard = () => {
   const { toast } = useToast();
   const [statusFilter, setStatusFilter] = useState<string>("all");
 
-  // Check if user is authenticated and is an admin
   useEffect(() => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -36,7 +35,6 @@ const Dashboard = () => {
         return;
       }
 
-      // Check if user is an admin
       const { data: profile } = await supabase
         .from("profiles")
         .select("role")
@@ -67,7 +65,6 @@ const Dashboard = () => {
     checkAuth();
   }, [navigate]);
 
-  // Fetch all orders and related user profiles
   const { data: orders, isLoading, refetch } = useQuery({
     queryKey: ["adminOrders", statusFilter],
     queryFn: async () => {
@@ -76,7 +73,8 @@ const Dashboard = () => {
         .select(`
           *,
           profiles (
-            name
+            name,
+            email
           )
         `)
         .order('created_at', { ascending: false });
@@ -177,14 +175,19 @@ const Dashboard = () => {
         {isLoading ? (
           <p>Loading orders...</p>
         ) : (
-          <div className="border rounded-lg">
+          <div className="border rounded-lg overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>Client</TableHead>
+                  <TableHead>Email</TableHead>
                   <TableHead>Event Name</TableHead>
                   <TableHead>Software Type</TableHead>
+                  <TableHead>Dimensions</TableHead>
+                  <TableHead>Photo Boxes</TableHead>
+                  <TableHead>Darkroom File</TableHead>
                   <TableHead>Turnaround Time</TableHead>
+                  <TableHead>Details</TableHead>
                   <TableHead>Price</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Actions</TableHead>
@@ -195,9 +198,16 @@ const Dashboard = () => {
                   orders.map((order) => (
                     <TableRow key={order.id}>
                       <TableCell>{order.profiles?.name || 'Unknown'}</TableCell>
+                      <TableCell>{order.profiles?.email || 'Unknown'}</TableCell>
                       <TableCell>{order.event_name}</TableCell>
-                      <TableCell>{order.software_type}</TableCell>
+                      <TableCell className="capitalize">{order.software_type.replace(/_/g, ' ')}</TableCell>
+                      <TableCell>{order.dimensions}</TableCell>
+                      <TableCell>{order.photo_boxes}</TableCell>
+                      <TableCell>{order.darkroom_file ? 'Yes' : 'No'}</TableCell>
                       <TableCell>{order.turnaround_time}</TableCell>
+                      <TableCell className="max-w-[200px] truncate" title={order.details || ''}>
+                        {order.details || '-'}
+                      </TableCell>
                       <TableCell>{formatPrice(order.price)}</TableCell>
                       <TableCell>
                         <Badge variant={getStatusBadgeVariant(order.status)}>
@@ -224,7 +234,7 @@ const Dashboard = () => {
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center py-4">
+                    <TableCell colSpan={12} className="text-center py-4">
                       No orders found
                     </TableCell>
                   </TableRow>
