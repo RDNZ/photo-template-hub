@@ -1,3 +1,5 @@
+import { Json } from "../types";
+
 export type Order = {
   id: string;
   user_id: string | null;
@@ -12,7 +14,7 @@ export type Order = {
   created_at: string;
   updated_at: string;
   details: string | null;
-  reference_images: any[] | null;
+  reference_images: Json | null;
   photo_boxes: number | null;
   darkroom_file: boolean | null;
 };
@@ -28,7 +30,7 @@ export type OrderInsert = {
   preview_image?: string | null;
   final_file?: string | null;
   details?: string | null;
-  reference_images?: any[] | null;
+  reference_images?: Json | null;
   photo_boxes?: number | null;
   darkroom_file?: boolean | null;
 };
@@ -44,7 +46,7 @@ export type OrderUpdate = {
   preview_image?: string | null;
   final_file?: string | null;
   details?: string | null;
-  reference_images?: any[] | null;
+  reference_images?: Json | null;
   photo_boxes?: number | null;
   darkroom_file?: boolean | null;
 };

@@ -9,20 +9,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { OrderDetailsDialog } from "./OrderDetailsDialog";
-
-interface Order {
-  id: string;
-  event_name: string;
-  software_type: string;
-  dimensions: string;
-  turnaround_time: string;
-  photo_boxes: number;
-  darkroom_file?: boolean;
-  details?: string;
-  price: number;
-  status: string;
-  reference_images?: any[];
-}
+import { Order } from "@/integrations/supabase/types/orders";
 
 interface OrdersTableProps {
   orders: Order[];

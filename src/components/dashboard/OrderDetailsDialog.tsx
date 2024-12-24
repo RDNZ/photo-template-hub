@@ -8,21 +8,10 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect, useState } from "react";
+import { Order } from "@/integrations/supabase/types/orders";
 
 interface OrderDetailsDialogProps {
-  order: {
-    id: string;
-    event_name: string;
-    software_type: string;
-    dimensions: string;
-    turnaround_time: string;
-    photo_boxes: number;
-    darkroom_file?: boolean;
-    details?: string;
-    price: number;
-    status: string;
-    reference_images?: any[];
-  } | null;
+  order: Order | null;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -35,7 +24,7 @@ export const OrderDetailsDialog = ({ order, isOpen, onClose }: OrderDetailsDialo
       if (!order?.reference_images?.length) return;
       
       const urls = await Promise.all(
-        order.reference_images.map(async (image) => {
+        (order.reference_images as any[]).map(async (image) => {
           const { data } = supabase.storage
             .from('reference_images')
             .getPublicUrl(image.path);
