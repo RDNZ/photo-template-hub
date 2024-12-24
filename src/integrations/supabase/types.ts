@@ -12,6 +12,7 @@ export type Database = {
       orders: {
         Row: {
           created_at: string
+          details: string | null
           dimensions: string
           event_name: string
           final_file: string | null
@@ -26,6 +27,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          details?: string | null
           dimensions: string
           event_name: string
           final_file?: string | null
@@ -40,6 +42,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          details?: string | null
           dimensions?: string
           event_name?: string
           final_file?: string | null
