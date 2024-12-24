@@ -15,16 +15,41 @@ interface EmailRequest {
 }
 
 const handler = async (req: Request): Promise<Response> => {
-  console.log("Email function called");
+  console.log("Email function called with URL:", req.url);
   
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
+  if (!RESEND_API_KEY) {
+    console.error("RESEND_API_KEY is not set");
+    return new Response(
+      JSON.stringify({ error: "Server configuration error" }),
+      {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      }
+    );
+  }
+
   try {
     const emailRequest: EmailRequest = await req.json();
-    console.log("Sending email to:", emailRequest.to);
+    console.log("Received email request:", {
+      to: emailRequest.to,
+      subject: emailRequest.subject,
+    });
+
+    if (!emailRequest.to || !emailRequest.subject || !emailRequest.html) {
+      console.error("Invalid email request:", emailRequest);
+      return new Response(
+        JSON.stringify({ error: "Missing required email fields" }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
 
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -40,28 +65,47 @@ const handler = async (req: Request): Promise<Response> => {
       }),
     });
 
+    const responseData = await res.text();
+    console.log("Resend API response:", {
+      status: res.status,
+      data: responseData,
+    });
+
     if (res.ok) {
-      const data = await res.json();
-      console.log("Email sent successfully:", data);
+      let data;
+      try {
+        data = JSON.parse(responseData);
+      } catch (e) {
+        console.error("Error parsing response:", e);
+        data = { message: "Email sent but response parsing failed" };
+      }
 
       return new Response(JSON.stringify(data), {
         status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     } else {
-      const error = await res.text();
-      console.error("Error from Resend API:", error);
-      return new Response(JSON.stringify({ error }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      console.error("Resend API error:", responseData);
+      return new Response(
+        JSON.stringify({ error: responseData || "Failed to send email" }),
+        {
+          status: res.status,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
     }
   } catch (error: any) {
     console.error("Error in send-email function:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({ 
+        error: error.message,
+        stack: error.stack 
+      }),
+      {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      }
+    );
   }
 };
 
