@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
+import { ArrowLeft } from "lucide-react";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -64,11 +65,20 @@ const Profile = () => {
     refetch();
   };
 
+  const handleBack = () => {
+    navigate("/client-dashboard");
+  };
+
   return (
     <div className="min-h-screen p-8">
       <div className="max-w-2xl mx-auto">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold">Profile</h1>
+          <div className="flex items-center gap-4">
+            <Button variant="ghost" size="icon" onClick={handleBack}>
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+            <h1 className="text-3xl font-bold">Profile</h1>
+          </div>
           <ProfileMenu />
         </div>
 

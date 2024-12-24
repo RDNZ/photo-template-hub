@@ -4,6 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { ProfileMenu } from "@/components/ProfileMenu";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 
 const Settings = () => {
   const navigate = useNavigate();
@@ -18,11 +20,20 @@ const Settings = () => {
     checkAuth();
   }, [navigate]);
 
+  const handleBack = () => {
+    navigate("/client-dashboard");
+  };
+
   return (
     <div className="min-h-screen p-8">
       <div className="max-w-2xl mx-auto">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold">Settings</h1>
+          <div className="flex items-center gap-4">
+            <Button variant="ghost" size="icon" onClick={handleBack}>
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+            <h1 className="text-3xl font-bold">Settings</h1>
+          </div>
           <ProfileMenu />
         </div>
 
