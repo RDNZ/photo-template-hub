@@ -8,10 +8,43 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import { ArrowLeft } from "lucide-react";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+
+const passwordSchema = z.object({
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  confirmPassword: z.string(),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
+});
 
 const Profile = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  const form = useForm<z.infer<typeof passwordSchema>>({
+    resolver: zodResolver(passwordSchema),
+    defaultValues: {
+      password: "",
+      confirmPassword: "",
+    },
+  });
 
   const { data: profile, refetch } = useQuery({
     queryKey: ["profile"],
@@ -75,6 +108,29 @@ const Profile = () => {
     }
   };
 
+  const onPasswordSubmit = async (values: z.infer<typeof passwordSchema>) => {
+    try {
+      const { error } = await supabase.auth.updateUser({
+        password: values.password,
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Password updated successfully",
+      });
+
+      form.reset();
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to update password",
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleBack = () => {
     navigate("/client-dashboard");
   };
@@ -92,7 +148,7 @@ const Profile = () => {
           <ProfileMenu />
         </div>
 
-        <div className="bg-card p-6 rounded-lg shadow">
+        <div className="bg-card p-6 rounded-lg shadow space-y-6">
           <form onSubmit={handleUpdateProfile} className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="name">Name</Label>
@@ -115,6 +171,45 @@ const Profile = () => {
             </div>
             <Button type="submit">Update Profile</Button>
           </form>
+
+          <Accordion type="single" collapsible className="w-full">
+            <AccordionItem value="password">
+              <AccordionTrigger>Change Password</AccordionTrigger>
+              <AccordionContent>
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(onPasswordSubmit)} className="space-y-4">
+                    <FormField
+                      control={form.control}
+                      name="password"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>New Password</FormLabel>
+                          <FormControl>
+                            <Input type="password" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="confirmPassword"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Confirm New Password</FormLabel>
+                          <FormControl>
+                            <Input type="password" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <Button type="submit">Update Password</Button>
+                  </form>
+                </Form>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </div>
       </div>
     </div>
