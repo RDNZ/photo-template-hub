@@ -37,8 +37,9 @@ export const useCheckout = () => {
       if (response.error) {
         console.error("Checkout error details:", {
           error: response.error,
-          status: response.status,
-          statusText: response.statusText
+          message: response.error.message,
+          name: response.error.name,
+          context: response.error.context
         });
         toast({
           title: "Checkout Error",
