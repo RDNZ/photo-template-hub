@@ -77,9 +77,14 @@ const ClientDashboard = () => {
   const { data: orders, isLoading, error, refetch } = useQuery({
     queryKey: ["clientOrders"],
     queryFn: async () => {
+      console.log("Fetching orders for client");
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error("No session");
+
       const { data, error } = await supabase
         .from("orders")
         .select("*")
+        .eq("user_id", session.user.id)
         .order("created_at", { ascending: false });
 
       if (error) {
@@ -87,6 +92,7 @@ const ClientDashboard = () => {
         throw error;
       }
 
+      console.log("Orders fetched:", data);
       return data;
     },
     enabled: !isAuthChecking,
