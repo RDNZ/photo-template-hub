@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -11,6 +11,7 @@ import { ErrorState } from "@/components/dashboard/ErrorState";
 const ClientDashboard = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [searchParams] = useSearchParams();
   const [isAuthChecking, setIsAuthChecking] = useState(true);
 
   useEffect(() => {
@@ -98,9 +99,20 @@ const ClientDashboard = () => {
     enabled: !isAuthChecking,
   });
 
-  const handleNewOrder = () => {
-    navigate("/new-order");
-  };
+  // Check for success parameter and show toast
+  useEffect(() => {
+    const success = searchParams.get('success');
+    if (success === 'true') {
+      console.log("Payment successful, refetching orders");
+      refetch();
+      toast({
+        title: "Order Placed Successfully",
+        description: "Your order has been created and payment processed.",
+      });
+      // Remove the success parameter from the URL
+      navigate('/client-dashboard', { replace: true });
+    }
+  }, [searchParams, toast, navigate, refetch]);
 
   if (isAuthChecking) {
     return <LoadingSpinner message="Checking authentication..." />;
@@ -113,7 +125,7 @@ const ClientDashboard = () => {
   return (
     <div className="min-h-screen p-8">
       <div className="max-w-7xl mx-auto">
-        <DashboardHeader onNewOrder={handleNewOrder} />
+        <DashboardHeader onNewOrder={() => navigate('/new-order')} />
         {isLoading ? (
           <LoadingSpinner message="Loading orders..." />
         ) : (
