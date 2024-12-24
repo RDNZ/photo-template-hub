@@ -11,7 +11,7 @@ export const useOrderForm = () => {
       event_name: "",
       software_type: "",
       dimensions: "",
-      turnaround_time: "",
+      turnaround_time: "3d", // Changed from "" to "3d" to match the enum type
       details: "",
       email: "",
       darkroom_file: false,
