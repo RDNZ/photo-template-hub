@@ -15,7 +15,7 @@ interface EmailRequest {
 }
 
 const handler = async (req: Request): Promise<Response> => {
-  console.log("Email function called with URL:", req.url);
+  console.log("Email function called with method:", req.method);
   
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
