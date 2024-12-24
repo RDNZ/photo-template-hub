@@ -9,6 +9,7 @@ export const orderFormSchema = z.object({
   email: z.string().email("Invalid email address"),
   darkroom_file: z.boolean().default(false),
   reference_images: z.array(z.any()).optional().default([]),
+  photo_boxes: z.number().min(1).max(5).default(1),
 });
 
 export type OrderFormValues = z.infer<typeof orderFormSchema>;
@@ -28,4 +29,5 @@ export type OrderData = {
   updated_at?: string;
   darkroom_file: boolean;
   reference_images?: any[];
+  photo_boxes: number;
 };

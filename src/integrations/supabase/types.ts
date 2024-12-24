@@ -17,6 +17,7 @@ export type Database = {
           event_name: string
           final_file: string | null
           id: string
+          photo_boxes: number | null
           preview_image: string | null
           price: number
           reference_images: Json | null
@@ -33,6 +34,7 @@ export type Database = {
           event_name: string
           final_file?: string | null
           id?: string
+          photo_boxes?: number | null
           preview_image?: string | null
           price: number
           reference_images?: Json | null
@@ -49,6 +51,7 @@ export type Database = {
           event_name?: string
           final_file?: string | null
           id?: string
+          photo_boxes?: number | null
           preview_image?: string | null
           price?: number
           reference_images?: Json | null

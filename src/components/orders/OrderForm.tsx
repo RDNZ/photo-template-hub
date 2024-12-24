@@ -13,6 +13,7 @@ import { TurnaroundTimeField } from "./TurnaroundTimeField";
 import { DetailsField } from "./DetailsField";
 import { DarkroomFileField } from "./DarkroomFileField";
 import { ReferenceImagesField } from "./ReferenceImagesField";
+import { PhotoBoxesField } from "./PhotoBoxesField";
 import { calculateOrderPrice } from "@/lib/utils/priceCalculator";
 
 interface OrderFormProps {
@@ -33,6 +34,7 @@ export const OrderForm = ({ onSubmit, isSubmitting, onCancel }: OrderFormProps) 
       email: "",
       darkroom_file: false,
       reference_images: [],
+      photo_boxes: 1,
     },
   });
 
@@ -88,6 +90,7 @@ export const OrderForm = ({ onSubmit, isSubmitting, onCancel }: OrderFormProps) 
         <div className={`transition-opacity duration-300 ${softwareType ? 'opacity-100' : 'opacity-0'}`}>
           {softwareType && <DimensionsField form={form} />}
         </div>
+        <PhotoBoxesField form={form} />
         <DetailsField form={form} />
         <ReferenceImagesField form={form} />
         <TurnaroundTimeField form={form} />
