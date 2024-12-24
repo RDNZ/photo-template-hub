@@ -9,6 +9,59 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      orders: {
+        Row: {
+          created_at: string
+          dimensions: string
+          event_name: string
+          final_file: string | null
+          id: string
+          preview_image: string | null
+          price: number
+          software_type: string
+          status: string
+          turnaround_time: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          dimensions: string
+          event_name: string
+          final_file?: string | null
+          id?: string
+          preview_image?: string | null
+          price: number
+          software_type: string
+          status?: string
+          turnaround_time: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          dimensions?: string
+          event_name?: string
+          final_file?: string | null
+          id?: string
+          preview_image?: string | null
+          price?: number
+          software_type?: string
+          status?: string
+          turnaround_time?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           bundle_credits: number | null
