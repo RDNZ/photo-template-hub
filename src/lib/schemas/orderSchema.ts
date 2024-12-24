@@ -5,6 +5,7 @@ export const orderFormSchema = z.object({
   software_type: z.string().min(1, "Software type is required"),
   dimensions: z.string().min(1, "Dimensions are required"),
   turnaround_time: z.string().min(1, "Turnaround time is required"),
+  email: z.string().email("Invalid email address"),
 });
 
 export type OrderFormValues = z.infer<typeof orderFormSchema>;

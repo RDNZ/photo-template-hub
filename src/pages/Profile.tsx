@@ -25,10 +25,7 @@ const Profile = () => {
         .eq("id", session.user.id)
         .single();
 
-      return {
-        ...data,
-        email: session.user.email
-      };
+      return data;
     },
   });
 
@@ -46,26 +43,36 @@ const Profile = () => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const name = formData.get("name") as string;
+    const email = formData.get("email") as string;
 
-    const { error } = await supabase
-      .from("profiles")
-      .update({ name })
-      .eq("id", profile?.id);
+    try {
+      // Update email in auth
+      const { error: authError } = await supabase.auth.updateUser({
+        email: email,
+      });
 
-    if (error) {
+      if (authError) throw authError;
+
+      // Update profile in database
+      const { error: profileError } = await supabase
+        .from("profiles")
+        .update({ name, email })
+        .eq("id", profile?.id);
+
+      if (profileError) throw profileError;
+
+      toast({
+        title: "Success",
+        description: "Profile updated successfully. Please check your email to confirm the email change.",
+      });
+      refetch();
+    } catch (error: any) {
       toast({
         title: "Error",
-        description: "Failed to update profile",
+        description: error.message || "Failed to update profile",
         variant: "destructive",
       });
-      return;
     }
-
-    toast({
-      title: "Success",
-      description: "Profile updated successfully",
-    });
-    refetch();
   };
 
   const handleBack = () => {
@@ -100,10 +107,10 @@ const Profile = () => {
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
+                name="email"
                 type="email"
-                value={profile?.email || ""}
-                disabled
-                className="bg-muted"
+                defaultValue={profile?.email || ""}
+                placeholder="Enter your email"
               />
             </div>
             <Button type="submit">Update Profile</Button>

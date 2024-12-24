@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -18,6 +19,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { orderFormSchema, type OrderFormValues } from "@/lib/schemas/orderSchema";
+import { supabase } from "@/integrations/supabase/client";
 
 interface OrderFormProps {
   onSubmit: (values: OrderFormValues) => void;
@@ -33,12 +35,46 @@ export const OrderForm = ({ onSubmit, isSubmitting, onCancel }: OrderFormProps) 
       software_type: "",
       dimensions: "",
       turnaround_time: "",
+      email: "",
     },
   });
+
+  useEffect(() => {
+    const loadUserProfile = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("email")
+          .eq("id", session.user.id)
+          .single();
+
+        if (profile?.email) {
+          form.setValue("email", profile.email);
+        }
+      }
+    };
+
+    loadUserProfile();
+  }, [form]);
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input {...field} type="email" readOnly />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <FormField
           control={form.control}
           name="event_name"

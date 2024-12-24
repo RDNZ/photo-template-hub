@@ -66,6 +66,7 @@ export type Database = {
         Row: {
           bundle_credits: number | null
           created_at: string
+          email: string | null
           id: string
           name: string | null
           role: string | null
@@ -74,6 +75,7 @@ export type Database = {
         Insert: {
           bundle_credits?: number | null
           created_at?: string
+          email?: string | null
           id: string
           name?: string | null
           role?: string | null
@@ -82,6 +84,7 @@ export type Database = {
         Update: {
           bundle_credits?: number | null
           created_at?: string
+          email?: string | null
           id?: string
           name?: string | null
           role?: string | null
