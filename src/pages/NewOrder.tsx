@@ -1,27 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { orderFormSchema, type OrderFormValues, type OrderData } from "@/lib/schemas/orderSchema";
+import { OrderForm } from "@/components/orders/OrderForm";
+import { type OrderFormValues, type OrderData } from "@/lib/schemas/orderSchema";
 import { calculateOrderPrice } from "@/lib/utils/priceCalculator";
 
 const NewOrder = () => {
@@ -29,7 +11,6 @@ const NewOrder = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Check if user is authenticated and is a client
   useEffect(() => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -52,17 +33,7 @@ const NewOrder = () => {
     checkAuth();
   }, [navigate]);
 
-  const form = useForm<OrderFormValues>({
-    resolver: zodResolver(orderFormSchema),
-    defaultValues: {
-      event_name: "",
-      software_type: "",
-      dimensions: "",
-      turnaround_time: "",
-    },
-  });
-
-  const onSubmit = async (values: OrderFormValues) => {
+  const handleSubmit = async (values: OrderFormValues) => {
     setIsSubmitting(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
@@ -72,9 +43,11 @@ const NewOrder = () => {
 
       const price = calculateOrderPrice(values.software_type, values.turnaround_time);
 
-      // Create the complete order data that matches our Supabase schema
       const orderData: OrderData = {
-        ...values,
+        event_name: values.event_name,
+        software_type: values.software_type,
+        dimensions: values.dimensions,
+        turnaround_time: values.turnaround_time,
         price,
         user_id: session.user.id,
       };
@@ -110,109 +83,11 @@ const NewOrder = () => {
           </p>
         </div>
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <FormField
-              control={form.control}
-              name="event_name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Event Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter event name" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="software_type"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Software Type</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select software type" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="photoshop">Photoshop ($50)</SelectItem>
-                      <SelectItem value="illustrator">
-                        Illustrator ($75)
-                      </SelectItem>
-                      <SelectItem value="after_effects">
-                        After Effects ($100)
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="dimensions"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Dimensions</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Enter dimensions (e.g., 1920x1080)"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="turnaround_time"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Turnaround Time</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select turnaround time" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="24h">24 Hours (+50%)</SelectItem>
-                      <SelectItem value="48h">48 Hours (+25%)</SelectItem>
-                      <SelectItem value="72h">72 Hours (Standard)</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div className="flex justify-between">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => navigate("/client-dashboard")}
-              >
-                Cancel
-              </Button>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? "Submitting..." : "Submit Order"}
-              </Button>
-            </div>
-          </form>
-        </Form>
+        <OrderForm
+          onSubmit={handleSubmit}
+          isSubmitting={isSubmitting}
+          onCancel={() => navigate("/client-dashboard")}
+        />
       </div>
     </div>
   );
