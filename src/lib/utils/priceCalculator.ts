@@ -3,8 +3,8 @@ export const calculateOrderPrice = (
   turnaroundTime: string,
   hasDarkroomFile: boolean = false
 ): number => {
-  // Base price for all orders
-  let basePrice = 15;
+  // Base price starts at 0
+  let basePrice = 0;
 
   // Add turnaround time fee
   const turnaroundFees = {
