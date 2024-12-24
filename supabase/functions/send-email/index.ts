@@ -25,7 +25,7 @@ const handler = async (req: Request): Promise<Response> => {
   if (!RESEND_API_KEY) {
     console.error("RESEND_API_KEY is not set");
     return new Response(
-      JSON.stringify({ error: "Server configuration error" }),
+      JSON.stringify({ error: "Server configuration error: Missing API key" }),
       {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -51,6 +51,7 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
+    console.log("Sending email via Resend API...");
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -58,7 +59,7 @@ const handler = async (req: Request): Promise<Response> => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "Photo Booth Template <orders@photobooth-template.com>",
+        from: "Custom Photo Booth Templates <orders@customphotoboothtemplates.com>",
         to: emailRequest.to,
         subject: emailRequest.subject,
         html: emailRequest.html,
@@ -85,9 +86,12 @@ const handler = async (req: Request): Promise<Response> => {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     } else {
-      console.error("Resend API error:", responseData);
+      console.error("Resend API error response:", responseData);
       return new Response(
-        JSON.stringify({ error: responseData || "Failed to send email" }),
+        JSON.stringify({ 
+          error: "Failed to send email",
+          details: responseData
+        }),
         {
           status: res.status,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -98,7 +102,8 @@ const handler = async (req: Request): Promise<Response> => {
     console.error("Error in send-email function:", error);
     return new Response(
       JSON.stringify({ 
-        error: error.message,
+        error: "Internal server error",
+        details: error.message,
         stack: error.stack 
       }),
       {
