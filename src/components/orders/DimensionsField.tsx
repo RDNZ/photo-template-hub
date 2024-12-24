@@ -78,7 +78,11 @@ export const DimensionsField = ({ form }: DimensionsFieldProps) => {
           <FormLabel>Dimensions</FormLabel>
           <FormControl>
             {dimensionOptions ? (
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select 
+                onValueChange={field.onChange} 
+                defaultValue={field.value}
+                disabled={!softwareType}
+              >
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Select dimensions" />
@@ -96,6 +100,7 @@ export const DimensionsField = ({ form }: DimensionsFieldProps) => {
               <Input
                 placeholder="Enter dimensions (e.g., 1920x1080)"
                 {...field}
+                disabled={!softwareType}
               />
             )}
           </FormControl>

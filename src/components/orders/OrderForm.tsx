@@ -87,9 +87,7 @@ export const OrderForm = ({ onSubmit, isSubmitting, onCancel }: OrderFormProps) 
         <EmailField form={form} />
         <EventNameField form={form} />
         <SoftwareTypeField form={form} />
-        <div className={`transition-opacity duration-300 ${softwareType ? 'opacity-100' : 'opacity-0'}`}>
-          {softwareType && <DimensionsField form={form} />}
-        </div>
+        <DimensionsField form={form} />
         <PhotoBoxesField form={form} />
         <DetailsField form={form} />
         <ReferenceImagesField form={form} />
