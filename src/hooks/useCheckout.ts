@@ -5,10 +5,11 @@ import { OrderFormValues } from "@/lib/schemas/orderSchema";
 export const useCheckout = () => {
   const handleCheckout = async (values: OrderFormValues, totalPrice: number) => {
     try {
-      console.log("Creating checkout session with values:", values);
+      console.log("Starting checkout process with values:", values);
       const { data: { session } } = await supabase.auth.getSession();
       
       if (!session) {
+        console.error("No session found");
         toast({
           title: "Authentication Error",
           description: "Please sign in to continue with the checkout",
@@ -16,6 +17,12 @@ export const useCheckout = () => {
         });
         return;
       }
+
+      console.log("Creating checkout session with params:", {
+        price: totalPrice,
+        email: session.user.email,
+        event_name: values.event_name
+      });
 
       const response = await supabase.functions.invoke('create-checkout', {
         body: { 
@@ -28,7 +35,11 @@ export const useCheckout = () => {
       console.log("Checkout response:", response);
 
       if (response.error) {
-        console.error("Checkout error:", response.error);
+        console.error("Checkout error details:", {
+          error: response.error,
+          status: response.status,
+          statusText: response.statusText
+        });
         toast({
           title: "Checkout Error",
           description: response.error.message || "Failed to create checkout session",
@@ -38,7 +49,7 @@ export const useCheckout = () => {
       }
 
       if (!response.data?.url) {
-        console.error("No checkout URL received");
+        console.error("No checkout URL in response:", response);
         toast({
           title: "Checkout Error",
           description: "Failed to create checkout session. Please try again.",
@@ -48,9 +59,10 @@ export const useCheckout = () => {
       }
 
       // Redirect to Stripe Checkout
+      console.log("Redirecting to Stripe checkout URL:", response.data.url);
       window.location.href = response.data.url;
     } catch (error) {
-      console.error('Error creating checkout session:', error);
+      console.error('Detailed checkout error:', error);
       toast({
         title: "Checkout Error",
         description: error instanceof Error 

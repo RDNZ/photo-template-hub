@@ -13,15 +13,17 @@ serve(async (req) => {
   }
 
   try {
-    const { price, email, event_name } = await req.json();
-    console.log('Received checkout request:', { price, email, event_name });
+    const requestData = await req.json();
+    console.log('Raw request data:', requestData);
+    
+    const { price, email, event_name } = requestData;
+    console.log('Parsed request data:', { price, email, event_name });
 
     if (!price || !email) {
-      console.error('Missing required fields:', { price, email });
+      const errorMsg = 'Missing required fields: price and email are required';
+      console.error(errorMsg, { price, email });
       return new Response(
-        JSON.stringify({ 
-          error: 'Missing required fields: price and email are required' 
-        }),
+        JSON.stringify({ error: errorMsg }),
         {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
           status: 400,
@@ -31,11 +33,10 @@ serve(async (req) => {
 
     const stripeKey = Deno.env.get('STRIPE_SECRET_KEY');
     if (!stripeKey) {
-      console.error('Stripe secret key is not configured');
+      const errorMsg = 'Stripe secret key is not configured';
+      console.error(errorMsg);
       return new Response(
-        JSON.stringify({ 
-          error: 'Stripe configuration error' 
-        }),
+        JSON.stringify({ error: errorMsg }),
         {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
           status: 500,
@@ -48,7 +49,13 @@ serve(async (req) => {
       apiVersion: '2023-10-16',
     });
 
-    console.log('Creating payment session...');
+    console.log('Creating payment session with params:', {
+      email,
+      price,
+      event_name,
+      origin: req.headers.get('origin')
+    });
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       mode: 'payment',
