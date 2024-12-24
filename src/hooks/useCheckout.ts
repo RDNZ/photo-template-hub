@@ -31,7 +31,7 @@ export const useCheckout = () => {
         console.error("Checkout error:", response.error);
         toast({
           title: "Checkout Error",
-          description: response.error.message || "Failed to create checkout session. Please try again.",
+          description: response.error.message || "Failed to create checkout session",
           variant: "destructive",
         });
         return;
@@ -41,7 +41,7 @@ export const useCheckout = () => {
         console.error("No checkout URL received");
         toast({
           title: "Checkout Error",
-          description: "Failed to create checkout session. Please contact support.",
+          description: "Failed to create checkout session. Please try again.",
           variant: "destructive",
         });
         return;
