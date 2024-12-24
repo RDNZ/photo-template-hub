@@ -25,7 +25,10 @@ const Profile = () => {
         .eq("id", session.user.id)
         .single();
 
-      return data;
+      return {
+        ...data,
+        email: session.user.email
+      };
     },
   });
 
@@ -98,16 +101,7 @@ const Profile = () => {
               <Input
                 id="email"
                 type="email"
-                value={profile?.id || ""}
-                disabled
-                className="bg-muted"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="role">Role</Label>
-              <Input
-                id="role"
-                value={profile?.role || ""}
+                value={profile?.email || ""}
                 disabled
                 className="bg-muted"
               />
