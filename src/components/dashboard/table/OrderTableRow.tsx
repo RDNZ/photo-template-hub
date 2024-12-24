@@ -10,17 +10,17 @@ interface OrderTableRowProps {
 
 export const OrderTableRow = ({ order, onClick }: OrderTableRowProps) => (
   <TableRow className="cursor-pointer hover:bg-muted/50" onClick={onClick}>
-    <TableCell>{order.event_name}</TableCell>
-    <TableCell className="capitalize">{order.software_type.replace(/_/g, ' ')}</TableCell>
-    <TableCell>{order.dimensions}</TableCell>
+    <TableCell className="bg-muted/20">{order.event_name}</TableCell>
+    <TableCell>{order.software_type.replace(/_/g, ' ')}</TableCell>
+    <TableCell className="bg-muted/20">{order.dimensions}</TableCell>
     <TableCell>{order.photo_boxes}</TableCell>
-    <TableCell>{order.darkroom_file ? 'Yes' : 'No'}</TableCell>
+    <TableCell className="bg-muted/20">{order.darkroom_file ? 'Yes' : 'No'}</TableCell>
     <TableCell>{formatTurnaroundTime(order.turnaround_time)}</TableCell>
-    <TableCell className="max-w-[200px] truncate" title={order.details || ''}>
+    <TableCell className="bg-muted/20 max-w-[200px] truncate" title={order.details || ''}>
       {order.details || '-'}
     </TableCell>
     <TableCell>{formatPrice(order.price)}</TableCell>
-    <TableCell>
+    <TableCell className="bg-muted/20">
       <Badge variant={getStatusBadgeVariant(order.status)}>
         {order.status.replace(/_/g, ' ')}
       </Badge>

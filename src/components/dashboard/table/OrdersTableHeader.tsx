@@ -7,15 +7,15 @@ import {
 export const OrdersTableHeader = () => (
   <TableHeader>
     <TableRow>
-      <TableHead>Event Name</TableHead>
+      <TableHead className="bg-muted/10">Event Name</TableHead>
       <TableHead>Software Type</TableHead>
-      <TableHead>Dimensions</TableHead>
+      <TableHead className="bg-muted/10">Dimensions</TableHead>
       <TableHead>Photo Boxes</TableHead>
-      <TableHead>Darkroom File</TableHead>
+      <TableHead className="bg-muted/10">Darkroom File</TableHead>
       <TableHead>Turnaround Time</TableHead>
-      <TableHead>Details</TableHead>
+      <TableHead className="bg-muted/10">Details</TableHead>
       <TableHead>Price</TableHead>
-      <TableHead>Status</TableHead>
+      <TableHead className="bg-muted/10">Status</TableHead>
     </TableRow>
   </TableHeader>
 );
