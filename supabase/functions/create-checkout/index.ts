@@ -14,13 +14,20 @@ serve(async (req) => {
 
   try {
     const { price, email, event_name } = await req.json();
+    console.log('Received checkout request:', { price, email, event_name });
 
     if (!price || !email) {
       throw new Error('Missing required fields: price and email are required');
     }
 
-    console.log('Initializing Stripe with test mode configuration...');
-    const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY') || '', {
+    const stripeKey = Deno.env.get('STRIPE_SECRET_KEY');
+    if (!stripeKey) {
+      console.error('Stripe secret key is not configured');
+      throw new Error('Stripe configuration error');
+    }
+    console.log('Initializing Stripe with key starting with:', stripeKey.substring(0, 8));
+
+    const stripe = new Stripe(stripeKey, {
       apiVersion: '2023-10-16',
     });
 
@@ -45,7 +52,7 @@ serve(async (req) => {
       cancel_url: `${req.headers.get('origin')}/client-dashboard?canceled=true`,
     });
 
-    console.log('Payment session created:', session.id);
+    console.log('Payment session created successfully:', { sessionId: session.id });
     return new Response(
       JSON.stringify({ url: session.url }),
       { 
@@ -54,7 +61,7 @@ serve(async (req) => {
       }
     );
   } catch (error) {
-    console.error('Error creating payment session:', error);
+    console.error('Detailed error in create-checkout:', error);
     return new Response(
       JSON.stringify({ 
         error: {

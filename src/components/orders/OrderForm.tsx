@@ -62,7 +62,7 @@ export const OrderForm = ({ onSubmit, isSubmitting, onCancel }: OrderFormProps) 
 
   const handleCheckout = async (values: OrderFormValues) => {
     try {
-      console.log("Creating checkout session...");
+      console.log("Creating checkout session with values:", values);
       const { data: { session } } = await supabase.auth.getSession();
       
       if (!session) {
@@ -88,7 +88,7 @@ export const OrderForm = ({ onSubmit, isSubmitting, onCancel }: OrderFormProps) 
         console.error("Checkout error:", response.error);
         toast({
           title: "Checkout Error",
-          description: response.error.message || "Failed to create checkout session",
+          description: response.error.message || "Failed to create checkout session. Please try again.",
           variant: "destructive",
         });
         return;
@@ -98,7 +98,7 @@ export const OrderForm = ({ onSubmit, isSubmitting, onCancel }: OrderFormProps) 
         console.error("No checkout URL received");
         toast({
           title: "Checkout Error",
-          description: "Failed to create checkout session",
+          description: "Failed to create checkout session. Please contact support.",
           variant: "destructive",
         });
         return;
@@ -110,7 +110,9 @@ export const OrderForm = ({ onSubmit, isSubmitting, onCancel }: OrderFormProps) 
       console.error('Error creating checkout session:', error);
       toast({
         title: "Checkout Error",
-        description: error instanceof Error ? error.message : "An unexpected error occurred",
+        description: error instanceof Error 
+          ? `Error: ${error.message}` 
+          : "An unexpected error occurred during checkout",
         variant: "destructive",
       });
     }
