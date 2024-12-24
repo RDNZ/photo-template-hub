@@ -78,10 +78,14 @@ const ClientDashboard = () => {
   const { data: orders, isLoading, error, refetch } = useQuery({
     queryKey: ["clientOrders"],
     queryFn: async () => {
-      console.log("Fetching orders for client");
+      console.log("Starting to fetch orders for client");
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) throw new Error("No session");
+      if (!session) {
+        console.error("No session found while fetching orders");
+        throw new Error("No session");
+      }
 
+      console.log("Fetching orders for user ID:", session.user.id);
       const { data, error } = await supabase
         .from("orders")
         .select("*")
@@ -93,10 +97,12 @@ const ClientDashboard = () => {
         throw error;
       }
 
-      console.log("Orders fetched:", data);
+      console.log("Orders fetched successfully:", data);
       return data;
     },
     enabled: !isAuthChecking,
+    refetchOnWindowFocus: true,
+    staleTime: 1000, // Consider data stale after 1 second
   });
 
   // Check for success parameter and show toast
@@ -119,6 +125,7 @@ const ClientDashboard = () => {
   }
 
   if (error) {
+    console.error("Error in orders query:", error);
     return <ErrorState onRetry={() => refetch()} />;
   }
 
