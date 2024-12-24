@@ -34,9 +34,13 @@ export const SoftwareTypeField = ({ form }: SoftwareTypeFieldProps) => {
               </SelectTrigger>
             </FormControl>
             <SelectContent>
-              <SelectItem value="photoshop">Photoshop ($50)</SelectItem>
-              <SelectItem value="illustrator">Illustrator ($75)</SelectItem>
-              <SelectItem value="after_effects">After Effects ($100)</SelectItem>
+              <SelectItem value="touchpix">Touchpix</SelectItem>
+              <SelectItem value="darkroom_booth_3">Darkroom Booth 3</SelectItem>
+              <SelectItem value="revospin_360">RevoSpin 360</SelectItem>
+              <SelectItem value="spinner_360">Spinner 360</SelectItem>
+              <SelectItem value="dslr_booth">dslrBooth</SelectItem>
+              <SelectItem value="salsa_booth">Salsa Booth</SelectItem>
+              <SelectItem value="amazebooth">Amazebooth</SelectItem>
             </SelectContent>
           </Select>
           <FormMessage />
