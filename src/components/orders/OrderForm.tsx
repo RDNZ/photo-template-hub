@@ -2,18 +2,11 @@ import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
 import { orderFormSchema, type OrderFormValues } from "@/lib/schemas/orderSchema";
 import { supabase } from "@/integrations/supabase/client";
-import { EmailField } from "./EmailField";
-import { EventNameField } from "./EventNameField";
-import { SoftwareTypeField } from "./SoftwareTypeField";
-import { DimensionsField } from "./DimensionsField";
-import { TurnaroundTimeField } from "./TurnaroundTimeField";
-import { DetailsField } from "./DetailsField";
-import { DarkroomFileField } from "./DarkroomFileField";
-import { ReferenceImagesField } from "./ReferenceImagesField";
-import { PhotoBoxesField } from "./PhotoBoxesField";
+import { OrderFormFields } from "./OrderFormFields";
+import { PriceDisplay } from "./PriceDisplay";
+import { FormActions } from "./FormActions";
 import { calculateOrderPrice } from "@/lib/utils/priceCalculator";
 
 interface OrderFormProps {
@@ -84,35 +77,13 @@ export const OrderForm = ({ onSubmit, isSubmitting, onCancel }: OrderFormProps) 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleCheckout)} className="space-y-6">
-        <EmailField form={form} />
-        <EventNameField form={form} />
-        <SoftwareTypeField form={form} />
-        <DimensionsField form={form} />
-        <PhotoBoxesField form={form} />
-        <DetailsField form={form} />
-        <ReferenceImagesField form={form} />
-        <TurnaroundTimeField form={form} />
-        <DarkroomFileField form={form} />
-
-        <div className="mt-6 rounded-lg bg-gray-50 px-4 py-3">
-          <div className="flex items-center justify-between">
-            <span className="text-lg font-medium">Total Price:</span>
-            <span className="text-lg font-bold">${totalPrice}</span>
-          </div>
-        </div>
-
-        <div className="flex justify-between">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={onCancel}
-          >
-            Cancel
-          </Button>
-          <Button type="submit" disabled={isSubmitting || totalPrice === 0}>
-            {isSubmitting ? "Processing..." : "Proceed to Checkout"}
-          </Button>
-        </div>
+        <OrderFormFields form={form} />
+        <PriceDisplay price={totalPrice} />
+        <FormActions 
+          onCancel={onCancel}
+          isSubmitting={isSubmitting}
+          isDisabled={totalPrice === 0}
+        />
       </form>
     </Form>
   );
