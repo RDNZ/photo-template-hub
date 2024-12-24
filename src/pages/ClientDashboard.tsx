@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { ProfileMenu } from "@/components/ProfileMenu";
 import {
   Table,
   TableBody,
@@ -15,7 +16,6 @@ import {
 const ClientDashboard = () => {
   const navigate = useNavigate();
 
-  // Check if user is authenticated and is a client
   useEffect(() => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -55,7 +55,6 @@ const ClientDashboard = () => {
     checkAuth();
   }, [navigate]);
 
-  // Fetch user's orders
   const { data: orders, isLoading } = useQuery({
     queryKey: ["clientOrders"],
     queryFn: async () => {
@@ -89,7 +88,10 @@ const ClientDashboard = () => {
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold">My Orders</h1>
-          <Button onClick={handleNewOrder}>New Order</Button>
+          <div className="flex items-center gap-4">
+            <Button onClick={handleNewOrder}>New Order</Button>
+            <ProfileMenu />
+          </div>
         </div>
 
         {isLoading ? (
