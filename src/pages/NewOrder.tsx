@@ -21,7 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { orderFormSchema, type OrderFormValues } from "@/lib/schemas/orderSchema";
+import { orderFormSchema, type OrderFormValues, type OrderData } from "@/lib/schemas/orderSchema";
 import { calculateOrderPrice } from "@/lib/utils/priceCalculator";
 
 const NewOrder = () => {
@@ -72,11 +72,14 @@ const NewOrder = () => {
 
       const price = calculateOrderPrice(values.software_type, values.turnaround_time);
 
-      const { error } = await supabase.from("orders").insert({
+      // Create the complete order data that matches our Supabase schema
+      const orderData: OrderData = {
         ...values,
         price,
         user_id: session.user.id,
-      });
+      };
+
+      const { error } = await supabase.from("orders").insert(orderData);
 
       if (error) throw error;
 

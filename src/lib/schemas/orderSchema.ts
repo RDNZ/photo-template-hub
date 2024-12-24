@@ -8,3 +8,9 @@ export const orderFormSchema = z.object({
 });
 
 export type OrderFormValues = z.infer<typeof orderFormSchema>;
+
+// Type for the complete order data that matches Supabase schema
+export type OrderData = OrderFormValues & {
+  price: number;
+  user_id: string;
+};
