@@ -12,6 +12,7 @@ export type Database = {
       orders: {
         Row: {
           created_at: string
+          darkroom_file: boolean | null
           details: string | null
           dimensions: string
           event_name: string
@@ -29,6 +30,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          darkroom_file?: boolean | null
           details?: string | null
           dimensions: string
           event_name: string
@@ -46,6 +48,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          darkroom_file?: boolean | null
           details?: string | null
           dimensions?: string
           event_name?: string
