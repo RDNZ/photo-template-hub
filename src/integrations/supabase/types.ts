@@ -19,6 +19,7 @@ export type Database = {
           id: string
           preview_image: string | null
           price: number
+          reference_images: Json | null
           software_type: string
           status: string
           turnaround_time: string
@@ -34,6 +35,7 @@ export type Database = {
           id?: string
           preview_image?: string | null
           price: number
+          reference_images?: Json | null
           software_type: string
           status?: string
           turnaround_time: string
@@ -49,6 +51,7 @@ export type Database = {
           id?: string
           preview_image?: string | null
           price?: number
+          reference_images?: Json | null
           software_type?: string
           status?: string
           turnaround_time?: string

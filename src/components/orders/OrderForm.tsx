@@ -12,6 +12,7 @@ import { DimensionsField } from "./DimensionsField";
 import { TurnaroundTimeField } from "./TurnaroundTimeField";
 import { DetailsField } from "./DetailsField";
 import { DarkroomFileField } from "./DarkroomFileField";
+import { ReferenceImagesField } from "./ReferenceImagesField";
 import { calculateOrderPrice } from "@/lib/utils/priceCalculator";
 
 interface OrderFormProps {
@@ -31,6 +32,7 @@ export const OrderForm = ({ onSubmit, isSubmitting, onCancel }: OrderFormProps) 
       details: "",
       email: "",
       darkroom_file: false,
+      reference_images: [],
     },
   });
 
@@ -87,6 +89,7 @@ export const OrderForm = ({ onSubmit, isSubmitting, onCancel }: OrderFormProps) 
           {softwareType && <DimensionsField form={form} />}
         </div>
         <DetailsField form={form} />
+        <ReferenceImagesField form={form} />
         <TurnaroundTimeField form={form} />
         <DarkroomFileField form={form} />
 
