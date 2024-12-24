@@ -20,7 +20,7 @@ export const createOrder = async (values: OrderFormValues, totalPrice: number, u
     dimensions: values.dimensions,
     turnaround_time: values.turnaround_time,
     price: totalPrice,
-    status: 'pending',
+    status: 'submitted', // Changed from 'pending' to 'submitted'
     details: values.details || null,
     photo_boxes: values.photo_boxes,
     darkroom_file: values.darkroom_file,
