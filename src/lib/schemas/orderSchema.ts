@@ -5,6 +5,7 @@ export const orderFormSchema = z.object({
   software_type: z.string().min(1, "Software type is required"),
   dimensions: z.string().min(1, "Dimensions are required"),
   turnaround_time: z.string().min(1, "Turnaround time is required"),
+  details: z.string().optional(),
   email: z.string().email("Invalid email address"),
 });
 
@@ -16,6 +17,7 @@ export type OrderData = {
   software_type: string;
   dimensions: string;
   turnaround_time: string;
+  details?: string;
   price: number;
   user_id: string;
   status?: string;

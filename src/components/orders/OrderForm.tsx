@@ -10,6 +10,7 @@ import { EventNameField } from "./EventNameField";
 import { SoftwareTypeField } from "./SoftwareTypeField";
 import { DimensionsField } from "./DimensionsField";
 import { TurnaroundTimeField } from "./TurnaroundTimeField";
+import { DetailsField } from "./DetailsField";
 
 interface OrderFormProps {
   onSubmit: (values: OrderFormValues) => void;
@@ -25,9 +26,12 @@ export const OrderForm = ({ onSubmit, isSubmitting, onCancel }: OrderFormProps) 
       software_type: "",
       dimensions: "",
       turnaround_time: "",
+      details: "",
       email: "",
     },
   });
+
+  const softwareType = form.watch("software_type");
 
   useEffect(() => {
     const loadUserProfile = async () => {
@@ -54,7 +58,10 @@ export const OrderForm = ({ onSubmit, isSubmitting, onCancel }: OrderFormProps) 
         <EmailField form={form} />
         <EventNameField form={form} />
         <SoftwareTypeField form={form} />
-        <DimensionsField form={form} />
+        <div className={`transition-opacity duration-300 ${softwareType ? 'opacity-100' : 'opacity-0'}`}>
+          {softwareType && <DimensionsField form={form} />}
+        </div>
+        <DetailsField form={form} />
         <TurnaroundTimeField form={form} />
 
         <div className="flex justify-between">
