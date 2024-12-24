@@ -15,7 +15,7 @@ export const calculateOrderPrice = (
   };
 
   // Add turnaround fee to base price
-  basePrice += turnaroundFees[turnaroundTime as keyof typeof turnaroundFees] || 15;
+  basePrice += turnaroundFees[turnaroundTime as keyof typeof turnaroundFees] || 0;
 
   // Add darkroom file fee if applicable
   if (softwareType === "darkroom_booth_3" && hasDarkroomFile) {
