@@ -78,31 +78,36 @@ const ClientDashboard = () => {
   const { data: orders, isLoading, error, refetch } = useQuery({
     queryKey: ["clientOrders"],
     queryFn: async () => {
-      console.log("Starting to fetch orders for client");
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        console.error("No session found while fetching orders");
-        throw new Error("No session");
-      }
+      try {
+        console.log("Starting to fetch orders for client");
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
+          console.error("No session found while fetching orders");
+          throw new Error("No session");
+        }
 
-      console.log("Fetching orders for user ID:", session.user.id);
-      const { data, error } = await supabase
-        .from("orders")
-        .select("*")
-        .eq("user_id", session.user.id)
-        .order("created_at", { ascending: false });
+        console.log("Fetching orders for user ID:", session.user.id);
+        const { data, error } = await supabase
+          .from("orders")
+          .select("*")
+          .eq("user_id", session.user.id)
+          .order("created_at", { ascending: false });
 
-      if (error) {
-        console.error("Error fetching orders:", error);
+        if (error) {
+          console.error("Error fetching orders:", error);
+          throw error;
+        }
+
+        console.log("Orders fetched successfully:", data);
+        return data;
+      } catch (error) {
+        console.error("Error in queryFn:", error);
         throw error;
       }
-
-      console.log("Orders fetched successfully:", data);
-      return data;
     },
     enabled: !isAuthChecking,
     refetchOnWindowFocus: true,
-    staleTime: 1000, // Consider data stale after 1 second
+    staleTime: 1000,
   });
 
   // Check for success parameter and show toast
