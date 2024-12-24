@@ -22,6 +22,16 @@ const formatPrice = (price: number) => {
   }).format(price);
 };
 
+const formatTurnaroundTime = (time: string) => {
+  const timeMap: Record<string, string> = {
+    "3d": "3 Day Turnaround",
+    "2d": "2 Day Turnaround",
+    "1d": "1 Day Turnaround",
+    "12h": "12 Hour Turnaround",
+  };
+  return timeMap[time] || time;
+};
+
 const getStatusBadgeVariant = (status: string) => {
   switch (status) {
     case "submitted":
@@ -70,7 +80,7 @@ export const OrdersTable = ({ orders }: OrdersTableProps) => {
                   <TableCell>{order.dimensions}</TableCell>
                   <TableCell>{order.photo_boxes}</TableCell>
                   <TableCell>{order.darkroom_file ? 'Yes' : 'No'}</TableCell>
-                  <TableCell>{order.turnaround_time}</TableCell>
+                  <TableCell>{formatTurnaroundTime(order.turnaround_time)}</TableCell>
                   <TableCell className="max-w-[200px] truncate" title={order.details || ''}>
                     {order.details || '-'}
                   </TableCell>
