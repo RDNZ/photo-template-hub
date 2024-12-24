@@ -13,13 +13,18 @@ serve(async (req) => {
   }
 
   try {
-    const { price, email } = await req.json();
+    const { price, email, event_name } = await req.json();
 
+    if (!price || !email) {
+      throw new Error('Missing required fields: price and email are required');
+    }
+
+    console.log('Initializing Stripe with test mode configuration...');
     const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY') || '', {
       apiVersion: '2023-10-16',
     });
 
-    console.log('Creating payment session...');
+    console.log('Creating payment session for:', { email, price });
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       mode: 'payment',
@@ -28,7 +33,7 @@ serve(async (req) => {
           price_data: {
             currency: 'usd',
             product_data: {
-              name: 'Template Design Service',
+              name: `Photo Template Order - ${event_name || 'Custom Design'}`,
             },
             unit_amount: price * 100, // Convert to cents
           },
@@ -36,8 +41,8 @@ serve(async (req) => {
         },
       ],
       customer_email: email,
-      success_url: `${req.headers.get('origin')}/dashboard?success=true`,
-      cancel_url: `${req.headers.get('origin')}/dashboard?canceled=true`,
+      success_url: `${req.headers.get('origin')}/client-dashboard?success=true`,
+      cancel_url: `${req.headers.get('origin')}/client-dashboard?canceled=true`,
     });
 
     console.log('Payment session created:', session.id);
@@ -51,7 +56,12 @@ serve(async (req) => {
   } catch (error) {
     console.error('Error creating payment session:', error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ 
+        error: {
+          message: error instanceof Error ? error.message : 'An unexpected error occurred',
+          details: error
+        }
+      }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 500,

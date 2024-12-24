@@ -8,6 +8,7 @@ import { OrderFormFields } from "./OrderFormFields";
 import { PriceDisplay } from "./PriceDisplay";
 import { FormActions } from "./FormActions";
 import { calculateOrderPrice } from "@/lib/utils/priceCalculator";
+import { toast } from "@/components/ui/use-toast";
 
 interface OrderFormProps {
   onSubmit: (values: OrderFormValues) => void;
@@ -61,16 +62,57 @@ export const OrderForm = ({ onSubmit, isSubmitting, onCancel }: OrderFormProps) 
 
   const handleCheckout = async (values: OrderFormValues) => {
     try {
+      console.log("Creating checkout session...");
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        toast({
+          title: "Authentication Error",
+          description: "Please sign in to continue with the checkout",
+          variant: "destructive",
+        });
+        return;
+      }
+
       const response = await supabase.functions.invoke('create-checkout', {
-        body: { ...values, price: totalPrice }
+        body: { 
+          ...values, 
+          price: totalPrice,
+          email: session.user.email 
+        }
       });
 
-      if (response.error) throw response.error;
+      console.log("Checkout response:", response);
+
+      if (response.error) {
+        console.error("Checkout error:", response.error);
+        toast({
+          title: "Checkout Error",
+          description: response.error.message || "Failed to create checkout session",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (!response.data?.url) {
+        console.error("No checkout URL received");
+        toast({
+          title: "Checkout Error",
+          description: "Failed to create checkout session",
+          variant: "destructive",
+        });
+        return;
+      }
 
       // Redirect to Stripe Checkout
       window.location.href = response.data.url;
     } catch (error) {
       console.error('Error creating checkout session:', error);
+      toast({
+        title: "Checkout Error",
+        description: error instanceof Error ? error.message : "An unexpected error occurred",
+        variant: "destructive",
+      });
     }
   };
 
