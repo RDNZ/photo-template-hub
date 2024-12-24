@@ -10,17 +10,17 @@ interface OrderTableRowProps {
 
 export const OrderTableRow = ({ order, onClick }: OrderTableRowProps) => (
   <TableRow className="cursor-pointer hover:bg-muted/50" onClick={onClick}>
-    <TableCell className="bg-muted/20">{order.event_name}</TableCell>
-    <TableCell>{order.software_type.replace(/_/g, ' ')}</TableCell>
-    <TableCell className="bg-muted/20">{order.dimensions}</TableCell>
-    <TableCell>{order.photo_boxes}</TableCell>
-    <TableCell className="bg-muted/20">{order.darkroom_file ? 'Yes' : 'No'}</TableCell>
-    <TableCell>{formatTurnaroundTime(order.turnaround_time)}</TableCell>
-    <TableCell className="bg-muted/20 max-w-[200px] truncate" title={order.details || ''}>
+    <TableCell className="border-r border-muted/30">{order.event_name}</TableCell>
+    <TableCell className="border-r border-muted/30">{order.software_type.replace(/_/g, ' ')}</TableCell>
+    <TableCell className="border-r border-muted/30">{order.dimensions}</TableCell>
+    <TableCell className="border-r border-muted/30">{order.photo_boxes}</TableCell>
+    <TableCell className="border-r border-muted/30">{order.darkroom_file ? 'Yes' : 'No'}</TableCell>
+    <TableCell className="border-r border-muted/30">{formatTurnaroundTime(order.turnaround_time)}</TableCell>
+    <TableCell className="border-r border-muted/30 max-w-[200px] truncate" title={order.details || ''}>
       {order.details || '-'}
     </TableCell>
-    <TableCell>{formatPrice(order.price)}</TableCell>
-    <TableCell className="bg-muted/20">
+    <TableCell className="border-r border-muted/30">{formatPrice(order.price)}</TableCell>
+    <TableCell>
       <Badge variant={getStatusBadgeVariant(order.status)}>
         {order.status.replace(/_/g, ' ')}
       </Badge>

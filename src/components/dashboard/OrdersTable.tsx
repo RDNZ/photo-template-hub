@@ -15,7 +15,7 @@ export const OrdersTable = ({ orders }: OrdersTableProps) => {
 
   return (
     <>
-      <div className="border rounded-lg">
+      <div className="border rounded-lg overflow-hidden">
         <Table>
           <OrdersTableHeader />
           <TableBody>
