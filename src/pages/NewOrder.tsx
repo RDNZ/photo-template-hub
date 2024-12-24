@@ -50,6 +50,7 @@ const NewOrder = () => {
         turnaround_time: values.turnaround_time,
         price,
         user_id: session.user.id,
+        darkroom_file: values.darkroom_file,
       };
 
       const { error } = await supabase.from("orders").insert(orderData);
