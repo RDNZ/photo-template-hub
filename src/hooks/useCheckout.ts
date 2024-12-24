@@ -18,17 +18,51 @@ export const useCheckout = () => {
         return;
       }
 
+      // First create the order with pending status
+      console.log("Creating order in database...");
+      const { data: order, error: orderError } = await supabase
+        .from('orders')
+        .insert({
+          user_id: session.user.id,
+          event_name: values.event_name,
+          software_type: values.software_type,
+          dimensions: values.dimensions,
+          turnaround_time: values.turnaround_time,
+          price: totalPrice,
+          status: 'pending',
+          details: values.details,
+          photo_boxes: values.photo_boxes,
+          darkroom_file: values.darkroom_file,
+          reference_images: values.reference_images
+        })
+        .select()
+        .single();
+
+      if (orderError) {
+        console.error("Error creating order:", orderError);
+        toast({
+          title: "Order Creation Error",
+          description: "Failed to create order. Please try again.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      console.log("Order created successfully:", order);
+
       console.log("Creating checkout session with params:", {
         price: totalPrice,
         email: session.user.email,
-        event_name: values.event_name
+        event_name: values.event_name,
+        order_id: order.id
       });
 
       const response = await supabase.functions.invoke('create-checkout', {
         body: { 
           ...values, 
           price: totalPrice,
-          email: session.user.email 
+          email: session.user.email,
+          order_id: order.id
         }
       });
 
@@ -41,6 +75,13 @@ export const useCheckout = () => {
           name: response.error.name,
           context: response.error.context
         });
+        
+        // If checkout fails, delete the pending order
+        await supabase
+          .from('orders')
+          .delete()
+          .eq('id', order.id);
+
         toast({
           title: "Checkout Error",
           description: response.error.message || "Failed to create checkout session",
@@ -51,6 +92,13 @@ export const useCheckout = () => {
 
       if (!response.data?.url) {
         console.error("No checkout URL in response:", response);
+        
+        // If no checkout URL, delete the pending order
+        await supabase
+          .from('orders')
+          .delete()
+          .eq('id', order.id);
+
         toast({
           title: "Checkout Error",
           description: "Failed to create checkout session. Please try again.",

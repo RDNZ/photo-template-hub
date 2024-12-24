@@ -16,12 +16,12 @@ serve(async (req) => {
     const requestData = await req.json();
     console.log('Raw request data:', requestData);
     
-    const { price, email, event_name } = requestData;
-    console.log('Parsed request data:', { price, email, event_name });
+    const { price, email, event_name, order_id } = requestData;
+    console.log('Parsed request data:', { price, email, event_name, order_id });
 
-    if (!price || !email) {
-      const errorMsg = 'Missing required fields: price and email are required';
-      console.error(errorMsg, { price, email });
+    if (!price || !email || !order_id) {
+      const errorMsg = 'Missing required fields: price, email, and order_id are required';
+      console.error(errorMsg, { price, email, order_id });
       return new Response(
         JSON.stringify({ error: errorMsg }),
         {
@@ -53,6 +53,7 @@ serve(async (req) => {
       email,
       price,
       event_name,
+      order_id,
       origin: req.headers.get('origin')
     });
 
@@ -72,8 +73,8 @@ serve(async (req) => {
         },
       ],
       customer_email: email,
-      success_url: `${req.headers.get('origin')}/client-dashboard?success=true`,
-      cancel_url: `${req.headers.get('origin')}/client-dashboard?canceled=true`,
+      success_url: `${req.headers.get('origin')}/client-dashboard?success=true&order_id=${order_id}`,
+      cancel_url: `${req.headers.get('origin')}/client-dashboard?canceled=true&order_id=${order_id}`,
     });
 
     console.log('Payment session created successfully:', { sessionId: session.id });
