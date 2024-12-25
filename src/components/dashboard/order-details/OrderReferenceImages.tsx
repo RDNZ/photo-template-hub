@@ -54,30 +54,38 @@ export const OrderReferenceImages = ({
     <div>
       <h3 className="font-semibold mb-2">Reference Images</h3>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-        {imageUrls.map((url, index) => (
-          <div key={url} className="relative group">
-            <img
-              src={url}
-              alt={`Reference ${index + 1}`}
-              className="rounded-lg w-full h-48 object-cover cursor-pointer"
-              onClick={() => setSelectedImage({
-                url,
-                name: referenceImages[index].name || `Reference ${index + 1}`
-              })}
-            />
-            <Button
-              size="icon"
-              variant="secondary"
-              className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleDownload(url, referenceImages[index].name || `reference-${index + 1}.jpg`);
-              }}
-            >
-              <Download className="h-4 w-4" />
-            </Button>
-          </div>
-        ))}
+        {imageUrls.map((url, index) => {
+          const fileName = referenceImages[index]?.name || `Reference ${index + 1}`;
+          return (
+            <div key={url} className="relative group">
+              <div className="relative">
+                <img
+                  src={url}
+                  alt={fileName}
+                  className="rounded-lg w-full h-48 object-cover cursor-pointer"
+                  onClick={() => setSelectedImage({
+                    url,
+                    name: fileName
+                  })}
+                />
+                <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white p-2 truncate">
+                  {fileName}
+                </div>
+              </div>
+              <Button
+                size="icon"
+                variant="secondary"
+                className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDownload(url, fileName);
+                }}
+              >
+                <Download className="h-4 w-4" />
+              </Button>
+            </div>
+          );
+        })}
       </div>
 
       <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
