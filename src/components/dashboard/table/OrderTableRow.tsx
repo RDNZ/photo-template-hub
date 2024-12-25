@@ -4,12 +4,14 @@ import { Order } from "@/integrations/supabase/types/orders";
 import { formatPrice, formatTurnaroundTime, getStatusBadgeVariant } from "../utils/tableFormatters";
 
 interface OrderTableRowProps {
-  order: Order;
+  order: Order & { profiles: { name: string | null; email: string | null; } | null };
   onClick: () => void;
 }
 
 export const OrderTableRow = ({ order, onClick }: OrderTableRowProps) => (
   <TableRow className="cursor-pointer hover:bg-muted/50" onClick={onClick}>
+    <TableCell className="border-r border-muted/30">{order.profiles?.name || 'Unknown'}</TableCell>
+    <TableCell className="border-r border-muted/30">{order.profiles?.email || 'Unknown'}</TableCell>
     <TableCell className="border-r border-muted/30">{order.event_name}</TableCell>
     <TableCell className="border-r border-muted/30">{order.software_type.replace(/_/g, ' ')}</TableCell>
     <TableCell className="border-r border-muted/30">{order.dimensions}</TableCell>
