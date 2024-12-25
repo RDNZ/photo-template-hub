@@ -34,10 +34,19 @@ export const OrderTableRow = ({ order, onClick, isAdmin = false }: OrderTableRow
 
       if (error) throw error;
 
-      // Invalidate and refetch orders
       queryClient.invalidateQueries({ queryKey: ['adminOrders'] });
+      
+      toast({
+        title: "Status updated",
+        description: `Order status changed to ${newStatus.replace(/_/g, ' ')}`,
+      });
     } catch (error) {
       console.error('Error updating order status:', error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to update order status",
+      });
     }
   };
 
@@ -159,12 +168,14 @@ export const OrderTableRow = ({ order, onClick, isAdmin = false }: OrderTableRow
                 <Button
                   variant="outline"
                   size="sm"
+                  className="flex items-center gap-2"
                   onClick={(e) => {
                     e.stopPropagation();
                     document.getElementById(`preview-upload-${order.id}`)?.click();
                   }}
                 >
                   <Upload className="h-4 w-4" />
+                  Upload Preview
                 </Button>
               </div>
             )}
