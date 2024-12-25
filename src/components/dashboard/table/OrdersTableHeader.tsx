@@ -7,6 +7,8 @@ import {
 export const OrdersTableHeader = () => (
   <TableHeader>
     <TableRow>
+      <TableHead className="border-r border-muted/30">Client Name</TableHead>
+      <TableHead className="border-r border-muted/30">Client Email</TableHead>
       <TableHead className="border-r border-muted/30">Event Name</TableHead>
       <TableHead className="border-r border-muted/30">Software Type</TableHead>
       <TableHead className="border-r border-muted/30">Dimensions</TableHead>

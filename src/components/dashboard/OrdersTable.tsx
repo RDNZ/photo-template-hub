@@ -8,9 +8,10 @@ import { EmptyState } from "./table/EmptyState";
 
 interface OrdersTableProps {
   orders: Order[];
+  isAdmin?: boolean;
 }
 
-export const OrdersTable = ({ orders }: OrdersTableProps) => {
+export const OrdersTable = ({ orders, isAdmin = false }: OrdersTableProps) => {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
   return (
@@ -25,6 +26,7 @@ export const OrdersTable = ({ orders }: OrdersTableProps) => {
                   key={order.id}
                   order={order}
                   onClick={() => setSelectedOrder(order)}
+                  isAdmin={isAdmin}
                 />
               ))
             ) : (

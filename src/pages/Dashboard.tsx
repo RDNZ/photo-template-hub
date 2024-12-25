@@ -121,7 +121,7 @@ const Dashboard = () => {
         {isLoading ? (
           <p>Loading orders...</p>
         ) : (
-          <OrdersTable orders={orders || []} />
+          <OrdersTable orders={orders || []} isAdmin={true} />
         )}
       </div>
     </div>
