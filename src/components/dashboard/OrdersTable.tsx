@@ -18,7 +18,7 @@ export const OrdersTable = ({ orders, isAdmin = false }: OrdersTableProps) => {
     <>
       <div className="border rounded-lg overflow-hidden">
         <Table>
-          <OrdersTableHeader />
+          <OrdersTableHeader isAdmin={isAdmin} />
           <TableBody>
             {orders.length > 0 ? (
               orders.map((order) => (
