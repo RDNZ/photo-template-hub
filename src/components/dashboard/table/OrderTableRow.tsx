@@ -4,7 +4,7 @@ import { Order } from "@/integrations/supabase/types/orders";
 import { formatPrice, formatTurnaroundTime, getStatusBadgeVariant } from "../utils/tableFormatters";
 
 interface OrderTableRowProps {
-  order: Order & { profiles: { name: string | null; email: string | null; } | null };
+  order: Order;
   onClick: () => void;
 }
 

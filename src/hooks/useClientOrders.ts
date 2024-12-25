@@ -16,7 +16,13 @@ export const useClientOrders = (isAuthChecking: boolean) => {
         console.log("Fetching orders for user ID:", session.user.id);
         const { data, error } = await supabase
           .from("orders")
-          .select("*")
+          .select(`
+            *,
+            profiles:user_id (
+              name,
+              email
+            )
+          `)
           .eq("user_id", session.user.id)
           .order("created_at", { ascending: false });
 

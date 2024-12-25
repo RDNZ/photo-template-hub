@@ -7,7 +7,7 @@ import { OrderTableRow } from "./table/OrderTableRow";
 import { EmptyState } from "./table/EmptyState";
 
 interface OrdersTableProps {
-  orders: (Order & { profiles: { name: string | null; email: string | null } | null })[];
+  orders: Order[];
 }
 
 export const OrdersTable = ({ orders }: OrdersTableProps) => {
