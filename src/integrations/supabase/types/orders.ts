@@ -1,4 +1,5 @@
 import { Json } from "../types";
+import { Profile } from "./profiles";
 
 export type Order = {
   id: string;
@@ -17,6 +18,7 @@ export type Order = {
   reference_images: Json | null;
   photo_boxes: number | null;
   darkroom_file: boolean | null;
+  profiles?: Profile | null;
 };
 
 export type OrderInsert = {
