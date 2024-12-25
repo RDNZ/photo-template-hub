@@ -47,7 +47,7 @@ export const OrderDetailsDialog = ({ order, isOpen, onClose }: OrderDetailsDialo
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
+      <DialogContent className="max-w-3xl max-h-[85vh] overflow-hidden flex flex-col">
         <DialogHeader>
           <DialogTitle>Order Details - {order.event_name}</DialogTitle>
         </DialogHeader>
@@ -55,7 +55,10 @@ export const OrderDetailsDialog = ({ order, isOpen, onClose }: OrderDetailsDialo
           <div className="space-y-6 py-4">
             <OrderBasicInfo order={order} />
             <OrderAdditionalDetails details={order.details} />
-            <OrderReferenceImages imageUrls={imageUrls} />
+            <OrderReferenceImages 
+              imageUrls={imageUrls} 
+              referenceImages={order.reference_images as any[]} 
+            />
             <OrderStatusPrice status={order.status} price={order.price} />
           </div>
         </ScrollArea>
