@@ -1,6 +1,9 @@
 import { Json } from "../types";
 import { Profile } from "./profiles";
 
+// Define a type for the partial profile data we get from the join
+type OrderProfile = Pick<Profile, 'name' | 'email'>;
+
 export type Order = {
   id: string;
   user_id: string | null;
@@ -18,7 +21,7 @@ export type Order = {
   reference_images: Json | null;
   photo_boxes: number | null;
   darkroom_file: boolean | null;
-  profiles?: Profile | null;
+  profiles?: OrderProfile | null;
 };
 
 export type OrderInsert = {
