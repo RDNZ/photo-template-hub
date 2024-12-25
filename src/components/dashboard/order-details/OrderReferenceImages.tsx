@@ -68,15 +68,15 @@ export const OrderReferenceImages = ({ imageUrls, referenceImages }: OrderRefere
       </div>
 
       <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
-        <DialogContent className="max-w-4xl max-h-[90vh]">
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden">
           <DialogHeader>
             <DialogTitle>{selectedImage?.name}</DialogTitle>
           </DialogHeader>
-          <div className="relative mt-2">
+          <div className="relative flex items-center justify-center p-4 w-full h-full">
             <img
               src={selectedImage?.url}
               alt={selectedImage?.name}
-              className="rounded-lg w-full h-auto"
+              className="rounded-lg max-w-full max-h-[70vh] object-contain"
             />
             <Button
               size="icon"
