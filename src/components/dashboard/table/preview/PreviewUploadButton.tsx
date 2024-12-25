@@ -14,6 +14,7 @@ export const PreviewUploadButton = ({ orderId }: PreviewUploadButtonProps) => {
 
   const handlePreviewUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     try {
+      console.log("Starting preview upload for order:", orderId);
       const file = event.target.files?.[0];
       if (!file) return;
 
@@ -29,6 +30,7 @@ export const PreviewUploadButton = ({ orderId }: PreviewUploadButtonProps) => {
       const fileExt = file.name.split('.').pop();
       const fileName = `${orderId}_preview.${fileExt}`;
 
+      console.log("Uploading file to storage:", fileName);
       const { error: uploadError } = await supabase.storage
         .from('preview_images')
         .upload(fileName, file);
@@ -39,6 +41,8 @@ export const PreviewUploadButton = ({ orderId }: PreviewUploadButtonProps) => {
         .from('preview_images')
         .getPublicUrl(fileName);
 
+      console.log("File uploaded successfully, updating order with public URL:", publicUrl);
+      
       const { error: updateError } = await supabase
         .from('orders')
         .update({
@@ -49,11 +53,14 @@ export const PreviewUploadButton = ({ orderId }: PreviewUploadButtonProps) => {
 
       if (updateError) throw updateError;
 
+      console.log("Order updated successfully with preview image and status");
+      
+      // Invalidate both queries to ensure UI updates properly
       queryClient.invalidateQueries({ queryKey: ['adminOrders'] });
       
       toast({
         title: "Success",
-        description: "Preview uploaded successfully",
+        description: "Preview uploaded and status updated to preview ready",
       });
     } catch (error) {
       console.error('Error uploading preview:', error);
