@@ -1,21 +1,11 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Download } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { ImageDetails } from "./types";
+import { ImageGrid } from "./images/ImageGrid";
+import { ImagePreviewDialog } from "./images/ImagePreviewDialog";
 
 interface OrderReferenceImagesProps {
   imageUrls: string[];
   referenceImages: any[];
-}
-
-interface ImageDetails {
-  url: string;
-  name: string;
 }
 
 export const OrderReferenceImages = ({
@@ -53,63 +43,17 @@ export const OrderReferenceImages = ({
   return (
     <div>
       <h3 className="font-semibold mb-2">Reference Images</h3>
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-        {imageUrls.map((url, index) => {
-          const fileName = referenceImages[index]?.name || `Reference ${index + 1}`;
-          return (
-            <div key={url} className="relative group">
-              <div className="relative">
-                <img
-                  src={url}
-                  alt={fileName}
-                  className="rounded-lg w-full h-48 object-cover cursor-pointer"
-                  onClick={() => setSelectedImage({
-                    url,
-                    name: fileName
-                  })}
-                />
-                <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white p-2 truncate">
-                  {fileName}
-                </div>
-              </div>
-              <Button
-                size="icon"
-                variant="secondary"
-                className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleDownload(url, fileName);
-                }}
-              >
-                <Download className="h-4 w-4" />
-              </Button>
-            </div>
-          );
-        })}
-      </div>
-
-      <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden">
-          <DialogHeader>
-            <DialogTitle>{selectedImage?.name}</DialogTitle>
-          </DialogHeader>
-          <div className="relative flex items-center justify-center p-4 w-full h-full">
-            <img
-              src={selectedImage?.url}
-              alt={selectedImage?.name}
-              className="rounded-lg max-w-full max-h-[70vh] object-contain"
-            />
-            <Button
-              size="icon"
-              variant="secondary"
-              className="absolute top-2 right-2"
-              onClick={() => selectedImage && handleDownload(selectedImage.url, selectedImage.name)}
-            >
-              <Download className="h-4 w-4" />
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <ImageGrid
+        imageUrls={imageUrls}
+        referenceImages={referenceImages}
+        onImageSelect={(url, name) => setSelectedImage({ url, name })}
+        onDownload={handleDownload}
+      />
+      <ImagePreviewDialog
+        selectedImage={selectedImage}
+        onClose={() => setSelectedImage(null)}
+        onDownload={handleDownload}
+      />
     </div>
   );
 };
