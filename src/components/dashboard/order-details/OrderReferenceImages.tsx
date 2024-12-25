@@ -1,22 +1,37 @@
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Download } from "lucide-react";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Download } from "lucide-react";
 
 interface OrderReferenceImagesProps {
   imageUrls: string[];
   referenceImages: any[];
 }
 
-export const OrderReferenceImages = ({ imageUrls, referenceImages }: OrderReferenceImagesProps) => {
-  const [selectedImage, setSelectedImage] = useState<{url: string, name: string} | null>(null);
+interface ImageDetails {
+  url: string;
+  name: string;
+}
 
-  if (imageUrls.length === 0) return null;
+export const OrderReferenceImages = ({
+  imageUrls,
+  referenceImages,
+}: OrderReferenceImagesProps) => {
+  const [selectedImage, setSelectedImage] = useState<ImageDetails | null>(null);
+
+  if (!referenceImages || referenceImages.length === 0) {
+    return (
+      <div>
+        <h3 className="font-semibold mb-2">Reference Images</h3>
+        <p>No reference images provided.</p>
+      </div>
+    );
+  }
 
   const handleDownload = async (url: string, filename: string) => {
     try {
@@ -36,35 +51,33 @@ export const OrderReferenceImages = ({ imageUrls, referenceImages }: OrderRefere
   };
 
   return (
-    <>
-      <div>
-        <h3 className="font-semibold mb-2">Reference Images</h3>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {imageUrls.map((url, index) => (
-            <div key={index} className="relative group">
-              <img
-                src={url}
-                alt={`Reference ${index + 1}`}
-                className="rounded-lg object-cover w-full aspect-square cursor-pointer transition-transform hover:scale-[1.02]"
-                onClick={() => setSelectedImage({
-                  url,
-                  name: referenceImages[index]?.name || `Reference ${index + 1}`
-                })}
-              />
-              <Button
-                size="icon"
-                variant="secondary"
-                className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleDownload(url, referenceImages[index]?.name || `reference-${index + 1}.jpg`);
-                }}
-              >
-                <Download className="h-4 w-4" />
-              </Button>
-            </div>
-          ))}
-        </div>
+    <div>
+      <h3 className="font-semibold mb-2">Reference Images</h3>
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        {imageUrls.map((url, index) => (
+          <div key={url} className="relative group">
+            <img
+              src={url}
+              alt={`Reference ${index + 1}`}
+              className="rounded-lg w-full h-48 object-cover cursor-pointer"
+              onClick={() => setSelectedImage({
+                url,
+                name: referenceImages[index].name || `Reference ${index + 1}`
+              })}
+            />
+            <Button
+              size="icon"
+              variant="secondary"
+              className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDownload(url, referenceImages[index].name || `reference-${index + 1}.jpg`);
+              }}
+            >
+              <Download className="h-4 w-4" />
+            </Button>
+          </div>
+        ))}
       </div>
 
       <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
@@ -80,6 +93,7 @@ export const OrderReferenceImages = ({ imageUrls, referenceImages }: OrderRefere
             />
             <Button
               size="icon"
+              variant="secondary"
               className="absolute top-2 right-2"
               onClick={() => selectedImage && handleDownload(selectedImage.url, selectedImage.name)}
             >
@@ -88,6 +102,6 @@ export const OrderReferenceImages = ({ imageUrls, referenceImages }: OrderRefere
           </div>
         </DialogContent>
       </Dialog>
-    </>
+    </div>
   );
 };
