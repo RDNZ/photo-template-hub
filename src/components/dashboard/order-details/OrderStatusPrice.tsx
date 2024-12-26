@@ -11,6 +11,7 @@ interface OrderStatusPriceProps {
   price: number;
   previewImage?: string | null;
   previewFeedback?: string | null;
+  hideStatusPrice?: boolean;
 }
 
 export const OrderStatusPrice = ({ 
@@ -18,13 +19,14 @@ export const OrderStatusPrice = ({
   status, 
   price, 
   previewImage,
-  previewFeedback 
+  previewFeedback,
+  hideStatusPrice = false
 }: OrderStatusPriceProps) => {
   const [selectedImage, setSelectedImage] = useState<ImageDetails | null>(null);
 
   return (
-    <div className="space-y-4 pt-4">
-      <StatusBadgePrice status={status} price={price} />
+    <div className="space-y-4">
+      {!hideStatusPrice && <StatusBadgePrice status={status} price={price} />}
       
       {previewImage && (
         <div className="pt-4">
@@ -58,7 +60,6 @@ export const OrderStatusPrice = ({
         selectedImage={selectedImage}
         onClose={() => setSelectedImage(null)}
         onDownload={(url, filename) => {
-          // Using the existing download functionality from PreviewImage
           const img = document.createElement('a');
           img.href = url;
           img.download = filename;

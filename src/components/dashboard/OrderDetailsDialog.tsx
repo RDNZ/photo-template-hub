@@ -57,14 +57,20 @@ export const OrderDetailsDialog = ({ order, isOpen, onClose }: OrderDetailsDialo
               orderId={order.id}
               status={order.status} 
               price={order.price}
-              previewImage={order.preview_image}
-              previewFeedback={order.preview_feedback}
             />
             <OrderBasicInfo order={order} />
             <OrderAdditionalDetails details={order.details} />
             <OrderReferenceImages 
               imageUrls={imageUrls} 
               referenceImages={order.reference_images as any[]} 
+            />
+            <OrderStatusPrice 
+              orderId={order.id}
+              status={order.status} 
+              price={order.price}
+              previewImage={order.preview_image}
+              previewFeedback={order.preview_feedback}
+              hideStatusPrice
             />
           </div>
         </ScrollArea>
