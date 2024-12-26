@@ -5,6 +5,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -91,7 +92,6 @@ export const ReferenceImagesField = ({ form }: ReferenceImagesFieldProps) => {
       });
     } finally {
       setUploading(false);
-      // Reset the input
       event.target.value = "";
     }
   };
@@ -108,16 +108,16 @@ export const ReferenceImagesField = ({ form }: ReferenceImagesFieldProps) => {
       name="reference_images"
       render={() => (
         <FormItem>
-          <FormLabel>Reference Images (Optional)</FormLabel>
+          <FormLabel>Reference Images</FormLabel>
           <FormControl>
             <div className="space-y-4">
-              <div className="flex flex-wrap gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 {referenceImages.map((image: any, index: number) => (
-                  <div key={index} className="relative">
+                  <div key={index} className="relative group">
                     <img
                       src={image.url}
                       alt={`Reference ${index + 1}`}
-                      className="h-24 w-24 object-cover rounded-md"
+                      className="w-full aspect-square object-cover rounded-md"
                     />
                     <Button
                       type="button"
@@ -152,11 +152,11 @@ export const ReferenceImagesField = ({ form }: ReferenceImagesFieldProps) => {
                   {uploading ? "Uploading..." : "Upload Images"}
                 </Button>
               </div>
-              <p className="text-sm text-muted-foreground">
-                Upload up to 3 reference images (max 5MB each)
-              </p>
             </div>
           </FormControl>
+          <FormDescription>
+            Upload up to 3 reference images (max 5MB each) to help us understand your requirements
+          </FormDescription>
           <FormMessage />
         </FormItem>
       )}

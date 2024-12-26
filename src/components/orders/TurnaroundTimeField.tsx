@@ -4,6 +4,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
 import {
   Select,
@@ -40,6 +41,9 @@ export const TurnaroundTimeField = ({ form }: TurnaroundTimeFieldProps) => {
               <SelectItem value="12h">12 Hour Turnaround - $30</SelectItem>
             </SelectContent>
           </Select>
+          <FormDescription>
+            Choose your preferred turnaround time. Faster turnaround times have higher prices.
+          </FormDescription>
           <FormMessage />
         </FormItem>
       )}

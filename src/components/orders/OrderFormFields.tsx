@@ -9,6 +9,8 @@ import { DetailsField } from "./DetailsField";
 import { ReferenceImagesField } from "./ReferenceImagesField";
 import { TurnaroundTimeField } from "./TurnaroundTimeField";
 import { DarkroomFileField } from "./DarkroomFileField";
+import { Mail, CalendarDays, Settings2, Camera, Clock } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 
 interface OrderFormFieldsProps {
   form: UseFormReturn<OrderFormValues>;
@@ -16,16 +18,59 @@ interface OrderFormFieldsProps {
 
 export const OrderFormFields = ({ form }: OrderFormFieldsProps) => {
   return (
-    <>
-      <EmailField form={form} />
-      <EventNameField form={form} />
-      <SoftwareTypeField form={form} />
-      <DimensionsField form={form} />
-      <PhotoBoxesField form={form} />
-      <DetailsField form={form} />
-      <ReferenceImagesField form={form} />
-      <TurnaroundTimeField form={form} />
-      <DarkroomFileField form={form} />
-    </>
+    <div className="space-y-8">
+      {/* User Info Section */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-2 text-lg font-semibold">
+          <Mail className="h-5 w-5" />
+          <h2>User Information</h2>
+        </div>
+        <Separator />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <EmailField form={form} />
+          <EventNameField form={form} />
+        </div>
+      </div>
+
+      {/* Specifications Section */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-2 text-lg font-semibold">
+          <Settings2 className="h-5 w-5" />
+          <h2>Specifications</h2>
+        </div>
+        <Separator />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <SoftwareTypeField form={form} />
+          <DimensionsField form={form} />
+        </div>
+        <div className="grid grid-cols-1 gap-6">
+          <PhotoBoxesField form={form} />
+          <DetailsField form={form} />
+        </div>
+      </div>
+
+      {/* Reference Images Section */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-2 text-lg font-semibold">
+          <Camera className="h-5 w-5" />
+          <h2>Reference Images</h2>
+        </div>
+        <Separator />
+        <ReferenceImagesField form={form} />
+      </div>
+
+      {/* Turnaround Time Section */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-2 text-lg font-semibold">
+          <Clock className="h-5 w-5" />
+          <h2>Turnaround Time</h2>
+        </div>
+        <Separator />
+        <div className="grid grid-cols-1 gap-6">
+          <TurnaroundTimeField form={form} />
+          <DarkroomFileField form={form} />
+        </div>
+      </div>
+    </div>
   );
 };
