@@ -1,18 +1,9 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Dialog } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect, useState } from "react";
 import { Order } from "@/integrations/supabase/types/orders";
-import { OrderBasicInfo } from "./order-details/OrderBasicInfo";
-import { OrderAdditionalDetails } from "./order-details/OrderAdditionalDetails";
-import { OrderReferenceImages } from "./order-details/OrderReferenceImages";
-import { OrderStatusPrice } from "./order-details/OrderStatusPrice";
-import { useQueryClient } from "@tanstack/react-query";
+import { OrderDialogContent } from "./order-details/OrderDialogContent";
+import { OrderRealTimeUpdates } from "./order-details/OrderRealTimeUpdates";
 
 interface OrderDetailsDialogProps {
   order: Order | null;
@@ -28,52 +19,6 @@ export const OrderDetailsDialog = ({
   isAdmin = false 
 }: OrderDetailsDialogProps) => {
   const [imageUrls, setImageUrls] = useState<string[]>([]);
-  const queryClient = useQueryClient();
-
-  // Subscribe to real-time updates for the order
-  useEffect(() => {
-    if (!order?.id) return;
-
-    console.log("Setting up real-time subscription for order:", order.id);
-    
-    const channel = supabase
-      .channel(`order_updates_${order.id}`)
-      .on(
-        'postgres_changes',
-        {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'orders',
-          filter: `id=eq.${order.id}`,
-        },
-        async (payload) => {
-          console.log("Received real-time update for order:", payload);
-          
-          // Immediately update the preview image in the cache
-          const updatedOrder = payload.new as Order;
-          if (updatedOrder.preview_image) {
-            queryClient.setQueryData(['clientOrders'], (oldData: Order[] | undefined) => {
-              if (!oldData) return oldData;
-              return oldData.map(ord => 
-                ord.id === updatedOrder.id ? { ...ord, preview_image: updatedOrder.preview_image } : ord
-              );
-            });
-          }
-          
-          // Then invalidate queries to ensure full refresh
-          await queryClient.invalidateQueries({ queryKey: ['clientOrders'] });
-          await queryClient.invalidateQueries({ queryKey: ['adminOrders'] });
-          
-          console.log("Queries invalidated after real-time update");
-        }
-      )
-      .subscribe();
-
-    return () => {
-      console.log("Cleaning up real-time subscription");
-      supabase.removeChannel(channel);
-    };
-  }, [order?.id, queryClient]);
 
   useEffect(() => {
     const loadImages = async () => {
@@ -100,36 +45,12 @@ export const OrderDetailsDialog = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-3xl h-[85vh] flex flex-col">
-        <DialogHeader className="px-6 pt-6">
-          <DialogTitle>Order Details - {order.event_name}</DialogTitle>
-        </DialogHeader>
-        <ScrollArea className="flex-1 px-6">
-          <div className="space-y-6 py-4 pr-4">
-            <OrderStatusPrice 
-              orderId={order.id}
-              status={order.status} 
-              price={order.price}
-              isAdmin={isAdmin}
-            />
-            <OrderBasicInfo order={order} />
-            <OrderAdditionalDetails details={order.details} />
-            <OrderReferenceImages 
-              imageUrls={imageUrls} 
-              referenceImages={order.reference_images as any[]} 
-            />
-            <OrderStatusPrice 
-              orderId={order.id}
-              status={order.status} 
-              price={order.price}
-              previewImage={order.preview_image}
-              previewFeedback={order.preview_feedback}
-              hideStatusPrice
-              isAdmin={isAdmin}
-            />
-          </div>
-        </ScrollArea>
-      </DialogContent>
+      <OrderRealTimeUpdates orderId={order.id} />
+      <OrderDialogContent 
+        order={order}
+        imageUrls={imageUrls}
+        isAdmin={isAdmin}
+      />
     </Dialog>
   );
 };
