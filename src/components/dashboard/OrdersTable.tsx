@@ -39,14 +39,11 @@ export const OrdersTable = ({
 
   return (
     <>
-      <div className="space-y-4">
-        <h2 className="text-xl font-semibold">Current Orders</h2>
-        <OrderCardsGrid
-          orders={filteredOrders}
-          onOrderClick={setSelectedOrder}
-          isAdmin={isAdmin}
-        />
-      </div>
+      <OrderCardsGrid
+        orders={filteredOrders}
+        onOrderClick={setSelectedOrder}
+        isAdmin={isAdmin}
+      />
 
       <OrderDetailsDialog
         order={selectedOrder}

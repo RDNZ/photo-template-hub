@@ -38,15 +38,12 @@ export const CompletedOrdersTable = ({
   });
 
   return (
-    <div className="space-y-4">
-      <h2 className="text-xl font-semibold">Completed Orders</h2>
-      <OrderCardsGrid
-        orders={filteredOrders}
-        onOrderClick={onOrderClick}
-        onReuseOrder={onReuseOrder}
-        isAdmin={isAdmin}
-        showReuse={!isAdmin}
-      />
-    </div>
+    <OrderCardsGrid
+      orders={filteredOrders}
+      onOrderClick={onOrderClick}
+      onReuseOrder={onReuseOrder}
+      isAdmin={isAdmin}
+      showReuse={!isAdmin}
+    />
   );
 };
