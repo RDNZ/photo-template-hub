@@ -65,7 +65,7 @@ const Analytics = () => {
 
       const { data: revenue, error: revenueError } = await supabase
         .from("orders")
-        .select("price")
+        .select("price, created_at")  // Added created_at to the selection
         .eq("status", "completed");
 
       if (revenueError) throw revenueError;
