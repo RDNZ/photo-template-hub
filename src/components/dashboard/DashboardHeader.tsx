@@ -14,7 +14,7 @@ export const DashboardHeader = ({ onNewOrder }: DashboardHeaderProps) => (
         <div className="flex items-center gap-4">
           <Button 
             onClick={onNewOrder}
-            className="primary-button"
+            className="bg-brand-orange hover:bg-brand-orange/90 text-white transition-colors rounded-lg px-4 py-2 font-medium flex items-center gap-2"
           >
             <Plus className="h-4 w-4" />
             New Order
