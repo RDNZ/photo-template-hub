@@ -15,22 +15,23 @@ export const ImageGridItem = ({
   onDownload,
 }: ImageGridItemProps) => {
   return (
-    <div className="relative group">
-      <div className="relative">
+    <div className="relative group rounded-lg overflow-hidden bg-muted">
+      <div className="relative aspect-square">
         <img
           src={url}
           alt={fileName}
-          className="rounded-lg w-full h-48 object-cover cursor-pointer"
+          className="w-full h-full object-cover cursor-pointer transition-transform duration-200 group-hover:scale-105"
           onClick={onImageClick}
         />
-        <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white p-2 truncate">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+        <div className="absolute bottom-0 left-0 right-0 p-2 text-white text-sm truncate opacity-0 group-hover:opacity-100 transition-opacity duration-200">
           {fileName}
         </div>
       </div>
       <Button
         size="icon"
         variant="secondary"
-        className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+        className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
         onClick={onDownload}
       >
         <Download className="h-4 w-4" />

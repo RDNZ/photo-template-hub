@@ -3,6 +3,7 @@ import { Camera } from "lucide-react";
 import { ImageDetails } from "./types";
 import { ImageGrid } from "./images/ImageGrid";
 import { ImagePreviewDialog } from "./images/ImagePreviewDialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface OrderReferenceImagesProps {
   imageUrls: string[];
@@ -17,7 +18,7 @@ export const OrderReferenceImages = ({
 
   if (!referenceImages || referenceImages.length === 0) {
     return (
-      <div className="space-y-4">
+      <div className="space-y-4 mt-8">
         <h3 className="text-lg font-semibold flex items-center gap-2">
           <Camera className="h-5 w-5" />
           Reference Images
@@ -45,17 +46,19 @@ export const OrderReferenceImages = ({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 mt-8">
       <h3 className="text-lg font-semibold flex items-center gap-2">
         <Camera className="h-5 w-5" />
         Reference Images
       </h3>
-      <ImageGrid
-        imageUrls={imageUrls}
-        referenceImages={referenceImages}
-        onImageSelect={(url, name) => setSelectedImage({ url, name })}
-        onDownload={handleDownload}
-      />
+      <ScrollArea className="w-full">
+        <ImageGrid
+          imageUrls={imageUrls}
+          referenceImages={referenceImages}
+          onImageSelect={(url, name) => setSelectedImage({ url, name })}
+          onDownload={handleDownload}
+        />
+      </ScrollArea>
       <ImagePreviewDialog
         selectedImage={selectedImage}
         onClose={() => setSelectedImage(null)}
