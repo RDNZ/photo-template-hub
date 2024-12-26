@@ -32,7 +32,7 @@ export const StatusBadgePrice = ({ status, price }: StatusBadgePriceProps) => {
       <Badge className={`${getStatusColor(status)}`}>
         {formatStatus(status)}
       </Badge>
-      <span className="font-semibold">${(price / 100).toFixed(2)}</span>
+      <span className="font-semibold">${price.toFixed(2)}</span>
     </div>
   );
 };
