@@ -65,14 +65,27 @@ export const OrderStatusPrice = ({
       window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error('Error downloading preview:', error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to download preview image",
+      });
     }
   };
 
   const handleSubmitFeedback = async () => {
-    if (!orderId || !feedback.trim()) return;
+    if (!orderId || !feedback.trim()) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Please provide feedback before submitting",
+      });
+      return;
+    }
 
     setIsSubmitting(true);
     try {
+      console.log('Submitting feedback for order:', orderId);
       const { error } = await supabase
         .from('orders')
         .update({
@@ -81,18 +94,21 @@ export const OrderStatusPrice = ({
         })
         .eq('id', orderId);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase error:', error);
+        throw error;
+      }
 
       toast({
         title: "Feedback submitted",
         description: "Your feedback has been sent to the designer",
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error submitting feedback:', error);
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to submit feedback. Please try again.",
+        description: error.message || "Failed to submit feedback. Please try again.",
       });
     } finally {
       setIsSubmitting(false);
