@@ -24,26 +24,27 @@ export const CompletedOrdersSection = ({
   console.log(`Rendering Completed Orders section with ${orders.length} orders`);
   
   return (
-    <Card className={cn(
-      "section-card",
-      "bg-gradient-to-br from-brand-gray-light/50 to-transparent"
-    )}>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-xl text-brand-gray-dark">
-          <ClipboardList className="h-6 w-6 text-brand-teal" />
-          Completed Orders
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <CompletedOrdersTable 
-          orders={orders} 
-          onOrderClick={onOrderClick}
-          onReuseOrder={onReuseOrder}
-          isAdmin={isAdmin}
-          searchTerm={searchTerm}
-          statusFilter={statusFilter}
-        />
-      </CardContent>
-    </Card>
+    <div className="space-y-4">
+      <div className="flex items-center gap-2">
+        <ClipboardList className="h-6 w-6 text-brand-teal" />
+        <h2 className="text-xl font-semibold text-brand-gray-dark">Completed Orders</h2>
+      </div>
+      
+      <Card className={cn(
+        "section-card",
+        "bg-white shadow-sm hover:shadow-md transition-shadow duration-200"
+      )}>
+        <CardContent className="p-6">
+          <CompletedOrdersTable 
+            orders={orders} 
+            onOrderClick={onOrderClick}
+            onReuseOrder={onReuseOrder}
+            isAdmin={isAdmin}
+            searchTerm={searchTerm}
+            statusFilter={statusFilter}
+          />
+        </CardContent>
+      </Card>
+    </div>
   );
 };

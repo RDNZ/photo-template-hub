@@ -38,8 +38,8 @@ export const OrderCard = ({
   };
 
   return (
-    <Card className="dashboard-card animate-fade-in">
-      <CardHeader className="space-y-2">
+    <Card className="overflow-hidden bg-white shadow-sm hover:shadow-md transition-all duration-200">
+      <CardHeader className="space-y-2 bg-gray-50/50">
         <div className="flex items-start justify-between">
           <div className="space-y-1">
             <h3 className="font-semibold text-lg line-clamp-1 text-brand-gray-dark" title={order.event_name}>
@@ -66,7 +66,7 @@ export const OrderCard = ({
           )}
         </div>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-4 p-6">
         <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
           <div>
             <span className="text-muted-foreground">Software:</span>
@@ -102,12 +102,12 @@ export const OrderCard = ({
           </div>
         )}
       </CardContent>
-      <CardFooter className="flex flex-wrap gap-2">
+      <CardFooter className="flex flex-wrap gap-2 border-t bg-gray-50/50 p-4">
         <Button
-          className="flex-1 accent-button"
+          className="flex-1 bg-brand-teal hover:bg-brand-teal/90 text-white"
           onClick={onClick}
         >
-          <Eye className="h-4 w-4" />
+          <Eye className="h-4 w-4 mr-2" />
           View Details
         </Button>
         {isAdmin && order.status === 'in_progress' && (
@@ -120,9 +120,9 @@ export const OrderCard = ({
             variant="outline"
             size="sm"
             onClick={onReuseOrder}
-            className="flex-1 secondary-button"
+            className="flex-1 border-brand-teal text-brand-teal hover:bg-brand-teal/10"
           >
-            <Copy className="h-4 w-4" />
+            <Copy className="h-4 w-4 mr-2" />
             Reuse
           </Button>
         )}
