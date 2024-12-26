@@ -20,6 +20,8 @@ interface SoftwareTypeFieldProps {
 }
 
 export const SoftwareTypeField = ({ form }: SoftwareTypeFieldProps) => {
+  console.log("Current software type value:", form.watch("software_type"));
+  
   return (
     <FormField
       control={form.control}
@@ -27,7 +29,11 @@ export const SoftwareTypeField = ({ form }: SoftwareTypeFieldProps) => {
       render={({ field }) => (
         <FormItem>
           <FormLabel>Software Type</FormLabel>
-          <Select onValueChange={field.onChange} defaultValue={field.value}>
+          <Select 
+            onValueChange={field.onChange} 
+            value={field.value}
+            defaultValue={field.value}
+          >
             <FormControl>
               <SelectTrigger>
                 <SelectValue placeholder="Select software type" />
