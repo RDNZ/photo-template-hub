@@ -1,4 +1,5 @@
 import { Badge } from "@/components/ui/badge";
+import { formatPrice } from "../../utils/tableFormatters";
 
 interface StatusBadgePriceProps {
   status: string;
@@ -27,17 +28,12 @@ export const StatusBadgePrice = ({ status, price }: StatusBadgePriceProps) => {
     return status.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
   };
 
-  const formattedPrice = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  }).format((price || 0) / 100);
-
   return (
     <div className="flex items-center justify-between">
       <Badge className={`${getStatusColor(status)}`}>
         {formatStatus(status)}
       </Badge>
-      <span className="font-semibold">{formattedPrice}</span>
+      <span className="font-semibold">{formatPrice(price)}</span>
     </div>
   );
 };
