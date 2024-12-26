@@ -17,7 +17,7 @@ export const OrderDialogContent = ({
   imageUrls, 
   isAdmin = false 
 }: OrderDialogContentProps) => {
-  console.log("Rendering OrderDialogContent with price:", order.price);
+  console.log("Rendering OrderDialogContent with raw price:", order.price);
   
   return (
     <DialogContent className="max-w-3xl h-[85vh] flex flex-col">
@@ -29,7 +29,7 @@ export const OrderDialogContent = ({
           <OrderStatusPrice 
             orderId={order.id}
             status={order.status} 
-            price={order.price}
+            price={order.price} 
             isAdmin={isAdmin}
           />
           <OrderBasicInfo order={order} />

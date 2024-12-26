@@ -27,12 +27,13 @@ export const StatusBadgePrice = ({ status, price }: StatusBadgePriceProps) => {
     return status.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
   };
 
+  // Format price directly without division since it's already in dollars
   return (
     <div className="flex items-center justify-between">
       <Badge className={`${getStatusColor(status)}`}>
         {formatStatus(status)}
       </Badge>
-      <span className="font-semibold">${(price / 100).toFixed(2)}</span>
+      <span className="font-semibold">${price.toFixed(2)}</span>
     </div>
   );
 };
