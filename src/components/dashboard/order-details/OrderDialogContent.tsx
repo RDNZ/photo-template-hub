@@ -23,11 +23,11 @@ export const OrderDialogContent = ({
   console.log("Preview feedback:", order.preview_feedback);
   
   return (
-    <DialogContent className="max-w-3xl h-[85vh] flex flex-col">
+    <DialogContent className="max-w-3xl h-[85vh] flex flex-col bg-background">
       <OrderHeader eventName={order.event_name} />
       
-      <ScrollArea className="flex-1 px-6">
-        <div className="space-y-8 py-6 pr-4">
+      <ScrollArea className="flex-1">
+        <div className="space-y-8 p-6">
           <OrderStatusPrice 
             orderId={order.id}
             status={order.status} 
@@ -69,7 +69,7 @@ export const OrderDialogContent = ({
               />
               {order.preview_feedback && (
                 <div className="p-4 bg-muted rounded-lg">
-                  <h3 className="font-semibold mb-2">Client Feedback</h3>
+                  <h3 className="font-semibold mb-2 text-brand-gray-dark">Client Feedback</h3>
                   <p className="text-sm text-muted-foreground whitespace-pre-wrap">
                     {order.preview_feedback}
                   </p>

@@ -25,7 +25,11 @@ export const OrderStatusPrice = ({
 
   return (
     <div className="space-y-4">
-      {!hideStatusPrice && <StatusBadgePrice status={status} price={price} />}
+      {!hideStatusPrice && (
+        <div className="flex items-center justify-between p-4 bg-card rounded-lg border border-border">
+          <StatusBadgePrice status={status} price={price} />
+        </div>
+      )}
       
       {previewImage && (
         <PreviewSection 
