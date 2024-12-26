@@ -7,9 +7,12 @@ interface RevenueCardProps {
 
 export const RevenueCard = ({ monthlyRevenue, yearlyRevenue }: RevenueCardProps) => {
   const formatCurrency = (amount: number) => {
+    // Convert from cents to dollars before formatting
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'USD'
+      currency: 'USD',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
     }).format(amount / 100);
   };
 
