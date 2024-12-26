@@ -10,6 +10,7 @@ import ClientDashboard from "./pages/ClientDashboard";
 import NewOrder from "./pages/NewOrder";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
+import Analytics from "./pages/Analytics";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -32,6 +33,7 @@ const App = () => (
             <Route path="/new-order" element={<NewOrder />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/analytics" element={<Analytics />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
           <Toaster />
