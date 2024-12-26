@@ -107,7 +107,7 @@ export const OrderCard = ({
           variant="outline"
           size="sm"
           onClick={onClick}
-          className="flex-1 dashboard-button-accent"
+          className="flex-1 dashboard-button dashboard-button-accent"
         >
           <Eye className="h-4 w-4 text-white" />
           View Details

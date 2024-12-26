@@ -125,7 +125,7 @@
   }
 
   .dashboard-button-accent {
-    @apply bg-brand-orange text-white hover:bg-brand-orange/90 
+    @apply bg-[#F25F43] text-white hover:bg-[#F04230] 
            shadow-sm hover:shadow-md transition-all duration-300;
   }
 }
