@@ -21,11 +21,11 @@ export const OrderFormFields = ({ form }: OrderFormFieldsProps) => {
     <div className="space-y-8">
       {/* User Info Section */}
       <div className="space-y-4">
-        <div className="flex items-center gap-2 text-lg font-semibold">
-          <Mail className="h-5 w-5" />
+        <div className="flex items-center gap-2 text-lg font-semibold text-brand-gray-dark">
+          <Mail className="h-5 w-5 text-brand-teal" />
           <h2>User Information</h2>
         </div>
-        <Separator />
+        <Separator className="bg-brand-teal/10" />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <EmailField form={form} />
           <EventNameField form={form} />
@@ -34,11 +34,11 @@ export const OrderFormFields = ({ form }: OrderFormFieldsProps) => {
 
       {/* Specifications Section */}
       <div className="space-y-4">
-        <div className="flex items-center gap-2 text-lg font-semibold">
-          <Settings2 className="h-5 w-5" />
+        <div className="flex items-center gap-2 text-lg font-semibold text-brand-gray-dark">
+          <Settings2 className="h-5 w-5 text-brand-teal" />
           <h2>Specifications</h2>
         </div>
-        <Separator />
+        <Separator className="bg-brand-teal/10" />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <SoftwareTypeField form={form} />
           <DimensionsField form={form} />
@@ -51,21 +51,21 @@ export const OrderFormFields = ({ form }: OrderFormFieldsProps) => {
 
       {/* Reference Images Section */}
       <div className="space-y-4">
-        <div className="flex items-center gap-2 text-lg font-semibold">
-          <Camera className="h-5 w-5" />
+        <div className="flex items-center gap-2 text-lg font-semibold text-brand-gray-dark">
+          <Camera className="h-5 w-5 text-brand-teal" />
           <h2>Reference Images</h2>
         </div>
-        <Separator />
+        <Separator className="bg-brand-teal/10" />
         <ReferenceImagesField form={form} />
       </div>
 
       {/* Turnaround Time Section */}
       <div className="space-y-4">
-        <div className="flex items-center gap-2 text-lg font-semibold">
-          <Clock className="h-5 w-5" />
+        <div className="flex items-center gap-2 text-lg font-semibold text-brand-gray-dark">
+          <Clock className="h-5 w-5 text-brand-teal" />
           <h2>Turnaround Time</h2>
         </div>
-        <Separator />
+        <Separator className="bg-brand-teal/10" />
         <div className="grid grid-cols-1 gap-6">
           <TurnaroundTimeField form={form} />
           <DarkroomFileField form={form} />

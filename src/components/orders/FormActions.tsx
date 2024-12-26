@@ -14,11 +14,16 @@ export const FormActions = ({ onCancel, isSubmitting, isDisabled }: FormActionsP
         type="button"
         variant="outline"
         onClick={onCancel}
+        className="border-brand-teal text-brand-teal hover:bg-brand-teal/10"
       >
         <X className="mr-2 h-4 w-4" />
         Cancel
       </Button>
-      <Button type="submit" disabled={isSubmitting || isDisabled}>
+      <Button 
+        type="submit" 
+        disabled={isSubmitting || isDisabled}
+        className="bg-brand-orange hover:bg-brand-orange/90 text-white"
+      >
         {isSubmitting ? (
           "Processing..."
         ) : (

@@ -35,11 +35,12 @@ export const OrderForm = ({ onSubmit, isSubmitting, onCancel }: OrderFormProps) 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onCheckout)} className="space-y-8">
-        <Card className="p-6">
+        <Card className="p-6 md:p-8">
           <OrderFormFields form={form} />
         </Card>
+        
         <div className="sticky bottom-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-t z-10 p-6">
-          <div className="max-w-2xl mx-auto flex flex-col gap-4">
+          <div className="max-w-4xl mx-auto flex flex-col gap-4">
             <PriceDisplay price={totalPrice} />
             <FormActions 
               onCancel={onCancel}

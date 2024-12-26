@@ -5,6 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import { OrderForm } from "@/components/orders/OrderForm";
 import { type OrderFormValues, type OrderData } from "@/lib/schemas/orderSchema";
 import { calculateOrderPrice } from "@/lib/utils/priceCalculator";
+import { Card } from "@/components/ui/card";
 
 const NewOrder = () => {
   const navigate = useNavigate();
@@ -76,14 +77,14 @@ const NewOrder = () => {
   };
 
   return (
-    <div className="min-h-screen p-4 md:p-8">
-      <div className="max-w-2xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold">New Order</h1>
-          <p className="text-muted-foreground mt-2">
+    <div className="min-h-screen p-4 md:p-8 bg-background">
+      <div className="max-w-4xl mx-auto">
+        <Card className="p-6 md:p-8 mb-8">
+          <h1 className="text-3xl font-bold text-brand-gray-dark mb-2">New Order</h1>
+          <p className="text-muted-foreground">
             Please fill out the form below to submit a new order
           </p>
-        </div>
+        </Card>
 
         <OrderForm
           onSubmit={handleSubmit}
