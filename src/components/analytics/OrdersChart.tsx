@@ -1,5 +1,6 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { colors } from '@/config/theme/colors';
 
 interface OrdersChartProps {
   data: Array<{
@@ -27,16 +28,16 @@ export const OrdersChart = ({ data }: OrdersChartProps) => {
           <XAxis 
             dataKey="month" 
             fontSize={12}
-            tick={{ fill: 'currentColor' }}
+            tick={{ fill: colors.brand.gray.dark }}
           />
           <YAxis 
             fontSize={12}
-            tick={{ fill: 'currentColor' }}
+            tick={{ fill: colors.brand.gray.dark }}
           />
           <Tooltip />
           <Bar 
             dataKey="orders" 
-            fill="hsl(var(--primary))"
+            fill={colors.brand.teal}
             radius={[4, 4, 0, 0]}
           />
         </BarChart>

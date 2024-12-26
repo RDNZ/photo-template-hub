@@ -23,11 +23,11 @@ export const OrderCard = ({
   showReuse = false 
 }: OrderCardProps) => {
   return (
-    <Card className="h-full transition-all hover:shadow-md">
+    <Card className="h-full transition-all hover:shadow-md bg-brand-gray-light">
       <CardHeader className="space-y-2">
         <div className="flex items-start justify-between">
           <div className="space-y-1">
-            <h3 className="font-semibold text-lg line-clamp-1" title={order.event_name}>
+            <h3 className="font-semibold text-lg line-clamp-1 text-brand-gray-dark" title={order.event_name}>
               {order.event_name}
             </h3>
             {isAdmin && (
@@ -55,33 +55,33 @@ export const OrderCard = ({
         <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
           <div>
             <span className="text-muted-foreground">Software:</span>
-            <p className="font-medium">{order.software_type.replace(/_/g, ' ')}</p>
+            <p className="font-medium text-brand-gray-dark">{order.software_type.replace(/_/g, ' ')}</p>
           </div>
           <div>
             <span className="text-muted-foreground">Dimensions:</span>
-            <p className="font-medium">{order.dimensions}</p>
+            <p className="font-medium text-brand-gray-dark">{order.dimensions}</p>
           </div>
           <div>
             <span className="text-muted-foreground">Photo Boxes:</span>
-            <p className="font-medium">{order.photo_boxes}</p>
+            <p className="font-medium text-brand-gray-dark">{order.photo_boxes}</p>
           </div>
           <div>
             <span className="text-muted-foreground">Darkroom File:</span>
-            <p className="font-medium">{order.darkroom_file ? 'Yes' : 'No'}</p>
+            <p className="font-medium text-brand-gray-dark">{order.darkroom_file ? 'Yes' : 'No'}</p>
           </div>
           <div>
             <span className="text-muted-foreground">Turnaround:</span>
-            <p className="font-medium">{formatTurnaroundTime(order.turnaround_time)}</p>
+            <p className="font-medium text-brand-gray-dark">{formatTurnaroundTime(order.turnaround_time)}</p>
           </div>
           <div>
             <span className="text-muted-foreground">Price:</span>
-            <p className="font-medium">{formatPrice(order.price)}</p>
+            <p className="font-medium text-brand-gray-dark">{formatPrice(order.price)}</p>
           </div>
         </div>
         {order.details && (
           <div className="text-sm">
             <span className="text-muted-foreground">Details:</span>
-            <p className="line-clamp-2 font-medium mt-1" title={order.details}>
+            <p className="line-clamp-2 font-medium mt-1 text-brand-gray-dark" title={order.details}>
               {order.details}
             </p>
           </div>
@@ -92,7 +92,7 @@ export const OrderCard = ({
           variant="outline"
           size="sm"
           onClick={onClick}
-          className="flex-1"
+          className="flex-1 hover:bg-brand-teal hover:text-white"
         >
           <Eye className="h-4 w-4 mr-2" />
           View Details
@@ -107,7 +107,7 @@ export const OrderCard = ({
             variant="outline"
             size="sm"
             onClick={onReuseOrder}
-            className="flex-1 reuse-button"
+            className="flex-1 reuse-button hover:bg-brand-teal hover:text-white"
           >
             <Copy className="h-4 w-4 mr-2" />
             Reuse

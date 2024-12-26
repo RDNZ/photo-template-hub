@@ -13,12 +13,12 @@ export const AnalyticsHeader = ({ onRefresh }: AnalyticsHeaderProps) => {
   
   return (
     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-      <h1 className="text-2xl sm:text-3xl font-bold">Analytics Dashboard</h1>
+      <h1 className="text-2xl sm:text-3xl font-bold text-brand-gray-dark">Analytics Dashboard</h1>
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-4 w-full sm:w-auto">
         <Button 
           onClick={() => navigate('/dashboard')} 
           variant="outline"
-          className="flex items-center justify-center gap-2"
+          className="flex items-center justify-center gap-2 hover:bg-brand-teal hover:text-white"
           size={isMobile ? "lg" : "default"}
         >
           <ClipboardList className="h-4 w-4" />
@@ -28,7 +28,7 @@ export const AnalyticsHeader = ({ onRefresh }: AnalyticsHeaderProps) => {
           onClick={onRefresh} 
           variant="outline" 
           size={isMobile ? "lg" : "sm"}
-          className="flex items-center justify-center gap-2"
+          className="flex items-center justify-center gap-2 hover:bg-brand-teal hover:text-white"
         >
           <RefreshCw className="h-4 w-4" />
           Refresh Data
