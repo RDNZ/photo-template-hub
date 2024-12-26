@@ -46,11 +46,25 @@ export const OrderDetailsDialog = ({
           table: 'orders',
           filter: `id=eq.${order.id}`,
         },
-        (payload) => {
+        async (payload) => {
           console.log("Received real-time update for order:", payload);
-          // Invalidate and refetch the queries to update the UI
-          queryClient.invalidateQueries({ queryKey: ['clientOrders'] });
-          queryClient.invalidateQueries({ queryKey: ['adminOrders'] });
+          
+          // Immediately update the preview image in the cache
+          const updatedOrder = payload.new as Order;
+          if (updatedOrder.preview_image) {
+            queryClient.setQueryData(['clientOrders'], (oldData: Order[] | undefined) => {
+              if (!oldData) return oldData;
+              return oldData.map(ord => 
+                ord.id === updatedOrder.id ? { ...ord, preview_image: updatedOrder.preview_image } : ord
+              );
+            });
+          }
+          
+          // Then invalidate queries to ensure full refresh
+          await queryClient.invalidateQueries({ queryKey: ['clientOrders'] });
+          await queryClient.invalidateQueries({ queryKey: ['adminOrders'] });
+          
+          console.log("Queries invalidated after real-time update");
         }
       )
       .subscribe();
