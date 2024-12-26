@@ -10,9 +10,9 @@ export const StatusBadgePrice = ({ status, price }: StatusBadgePriceProps) => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'submitted':
-        return 'bg-blue-500 hover:bg-blue-600';
+        return 'bg-brand-teal hover:bg-brand-teal/90';
       case 'in_progress':
-        return 'bg-yellow-500 hover:bg-yellow-600';
+        return 'bg-brand-orange hover:bg-brand-orange/90';
       case 'preview_ready':
         return 'bg-purple-500 hover:bg-purple-600';
       case 'in_revision':
@@ -29,11 +29,13 @@ export const StatusBadgePrice = ({ status, price }: StatusBadgePriceProps) => {
   };
 
   return (
-    <div className="flex items-center justify-between">
-      <Badge className={`${getStatusColor(status)}`}>
+    <div className="flex items-center justify-between w-full">
+      <Badge className={`${getStatusColor(status)} text-sm font-medium`}>
         {formatStatus(status)}
       </Badge>
-      <span className="font-semibold">{formatPrice(price)}</span>
+      <span className="text-lg font-semibold text-brand-gray-dark">
+        {formatPrice(price)}
+      </span>
     </div>
   );
 };

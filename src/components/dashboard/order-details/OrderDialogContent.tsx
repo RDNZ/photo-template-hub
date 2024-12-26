@@ -19,9 +19,6 @@ export const OrderDialogContent = ({
   imageUrls, 
   isAdmin = false 
 }: OrderDialogContentProps) => {
-  console.log("Rendering OrderDialogContent with raw price:", order.price);
-  console.log("Preview feedback:", order.preview_feedback);
-  
   return (
     <DialogContent className="max-w-3xl h-[85vh] flex flex-col bg-background">
       <OrderHeader />
