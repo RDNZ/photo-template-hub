@@ -8,7 +8,7 @@ import { LoadingSpinner } from "@/components/dashboard/LoadingSpinner";
 import { OrdersChart } from "@/components/analytics/OrdersChart";
 import { CompletionRateCard } from "@/components/analytics/CompletionRateCard";
 import { RevenueCard } from "@/components/analytics/RevenueCard";
-import { RefreshCw } from "lucide-react";
+import { RefreshCw, ClipboardList } from "lucide-react";
 
 const Analytics = () => {
   const navigate = useNavigate();
@@ -65,7 +65,7 @@ const Analytics = () => {
 
       const { data: revenue, error: revenueError } = await supabase
         .from("orders")
-        .select("price, created_at")  // Added created_at to the selection
+        .select("price, created_at")
         .eq("status", "completed");
 
       if (revenueError) throw revenueError;
@@ -117,10 +117,20 @@ const Analytics = () => {
       <div className="max-w-7xl mx-auto space-y-8">
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold">Analytics Dashboard</h1>
-          <Button onClick={() => refetch()} variant="outline" size="sm">
-            <RefreshCw className="h-4 w-4 mr-2" />
-            Refresh Data
-          </Button>
+          <div className="flex items-center gap-4">
+            <Button 
+              onClick={() => navigate('/dashboard')} 
+              variant="outline"
+              className="flex items-center gap-2"
+            >
+              <ClipboardList className="h-4 w-4" />
+              View Orders
+            </Button>
+            <Button onClick={() => refetch()} variant="outline" size="sm">
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Refresh Data
+            </Button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
