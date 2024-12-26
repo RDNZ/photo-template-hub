@@ -19,13 +19,15 @@ export const OrdersSection = ({
   searchTerm,
   statusFilter,
 }: OrdersSectionProps) => {
+  console.log(`Rendering ${title} section with ${orders.length} orders`);
+  
   return (
     <Card className={cn(
       "section-card",
       "bg-gradient-to-br from-brand-teal/5 to-transparent"
     )}>
       <CardHeader>
-        <CardTitle className="section-header">
+        <CardTitle className="flex items-center gap-2 text-xl text-brand-gray-dark">
           <ClipboardList className="h-6 w-6 text-brand-teal" />
           {title}
         </CardTitle>

@@ -18,6 +18,8 @@ export const CompletedOrdersTable = ({
   searchTerm = "",
   statusFilter = "all"
 }: CompletedOrdersTableProps) => {
+  console.log("CompletedOrdersTable - Initial orders:", orders.length);
+  
   const filteredOrders = orders.filter(order => {
     const searchFields = [
       order.event_name,
@@ -34,8 +36,13 @@ export const CompletedOrdersTable = ({
       );
     const matchesStatus = statusFilter === "all" || order.status === statusFilter;
     const isCompleted = order.status === 'completed';
+    
+    console.log(`Order ${order.id} - Completed: ${isCompleted}, Matches Search: ${matchesSearch}, Matches Status: ${matchesStatus}`);
+    
     return matchesSearch && matchesStatus && isCompleted;
   });
+
+  console.log("CompletedOrdersTable - Filtered orders:", filteredOrders.length);
 
   return (
     <OrderCardsGrid

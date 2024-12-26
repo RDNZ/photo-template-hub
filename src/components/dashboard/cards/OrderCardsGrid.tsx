@@ -16,10 +16,12 @@ export const OrderCardsGrid = ({
   isAdmin = false,
   showReuse = false
 }: OrderCardsGridProps) => {
+  console.log("OrderCardsGrid - Rendering with orders:", orders.length);
+  
   if (orders.length === 0) {
     return (
       <div className="text-center py-8 text-muted-foreground">
-        No orders found.
+        No orders found in this category. {showReuse ? "Completed orders will appear here." : "New orders will appear here."}
       </div>
     );
   }

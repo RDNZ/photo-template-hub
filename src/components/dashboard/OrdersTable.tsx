@@ -17,6 +17,8 @@ export const OrdersTable = ({
   statusFilter = "all"
 }: OrdersTableProps) => {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  
+  console.log("OrdersTable - Initial orders:", orders.length);
 
   const filteredOrders = orders.filter(order => {
     const searchFields = [
@@ -34,8 +36,13 @@ export const OrdersTable = ({
       );
     const matchesStatus = statusFilter === "all" || order.status === statusFilter;
     const isCurrentOrder = order.status !== 'completed';
+    
+    console.log(`Order ${order.id} - Current: ${isCurrentOrder}, Matches Search: ${matchesSearch}, Matches Status: ${matchesStatus}`);
+    
     return matchesSearch && matchesStatus && isCurrentOrder;
   });
+
+  console.log("OrdersTable - Filtered orders:", filteredOrders.length);
 
   return (
     <>
