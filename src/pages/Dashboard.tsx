@@ -9,6 +9,7 @@ import { AdminDashboardHeader } from "@/components/dashboard/header/AdminDashboa
 import { SearchCard } from "@/components/dashboard/search/SearchCard";
 import { OrdersSection } from "@/components/dashboard/orders/OrdersSection";
 import { CompletedOrdersSection } from "@/components/dashboard/orders/CompletedOrdersSection";
+import { HeaderBackground } from "@/components/dashboard/header/HeaderBackground";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -100,7 +101,9 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen p-4 sm:p-8 bg-background">
       <div className="max-w-7xl mx-auto space-y-6">
-        <AdminDashboardHeader onRefresh={refetch} />
+        <HeaderBackground>
+          <AdminDashboardHeader onRefresh={refetch} />
+        </HeaderBackground>
         
         <SearchCard
           searchTerm={searchTerm}
