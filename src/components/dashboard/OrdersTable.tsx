@@ -9,11 +9,24 @@ import { EmptyState } from "./table/EmptyState";
 interface OrdersTableProps {
   orders: Order[];
   isAdmin?: boolean;
+  searchTerm?: string;
+  statusFilter?: string;
 }
 
-export const OrdersTable = ({ orders, isAdmin = false }: OrdersTableProps) => {
+export const OrdersTable = ({ 
+  orders, 
+  isAdmin = false,
+  searchTerm = "",
+  statusFilter = "all"
+}: OrdersTableProps) => {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-  const currentOrders = orders.filter(order => order.status !== 'completed');
+
+  const filteredOrders = orders.filter(order => {
+    const matchesSearch = order.event_name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = statusFilter === "all" || order.status === statusFilter;
+    const isCurrentOrder = order.status !== 'completed';
+    return matchesSearch && matchesStatus && isCurrentOrder;
+  });
 
   return (
     <>
@@ -23,8 +36,8 @@ export const OrdersTable = ({ orders, isAdmin = false }: OrdersTableProps) => {
           <Table>
             <OrdersTableHeader isAdmin={isAdmin} />
             <TableBody>
-              {currentOrders.length > 0 ? (
-                currentOrders.map((order) => (
+              {filteredOrders.length > 0 ? (
+                filteredOrders.map((order) => (
                   <OrderTableRow
                     key={order.id}
                     order={order}

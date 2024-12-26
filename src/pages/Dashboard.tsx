@@ -5,20 +5,15 @@ import { supabase } from "@/integrations/supabase/client";
 import { OrdersTable } from "@/components/dashboard/OrdersTable";
 import { CompletedOrdersTable } from "@/components/dashboard/CompletedOrdersTable";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { OrderDetailsDialog } from "@/components/dashboard/OrderDetailsDialog";
+import { OrderSearch } from "@/components/dashboard/search/OrderSearch";
 import { Order } from "@/integrations/supabase/types/orders";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const [statusFilter, setStatusFilter] = useState<string>("all");
   const [selectedCompletedOrder, setSelectedCompletedOrder] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -73,10 +68,6 @@ const Dashboard = () => {
         `)
         .order('created_at', { ascending: false });
 
-      if (statusFilter !== "all") {
-        query = query.eq("status", statusFilter);
-      }
-
       const { data, error } = await query;
 
       if (error) {
@@ -95,7 +86,6 @@ const Dashboard = () => {
 
   const handleReuseOrder = (order: Order) => {
     console.log("Admin reusing order:", order);
-    // Store complete order details in localStorage
     const orderToReuse = {
       event_name: order.event_name,
       software_type: order.software_type,
@@ -121,35 +111,30 @@ const Dashboard = () => {
           </Button>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium mb-2">Filter by Status</label>
-          <Select
-            value={statusFilter}
-            onValueChange={(value) => setStatusFilter(value)}
-          >
-            <SelectTrigger className="w-[200px]">
-              <SelectValue placeholder="Select status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Orders</SelectItem>
-              <SelectItem value="submitted">Submitted</SelectItem>
-              <SelectItem value="in_progress">In Progress</SelectItem>
-              <SelectItem value="preview_ready">Preview Ready</SelectItem>
-              <SelectItem value="completed">Completed</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        <OrderSearch
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          filterStatus={statusFilter}
+          onFilterChange={setStatusFilter}
+        />
 
         {isLoading ? (
           <p>Loading orders...</p>
         ) : (
           <div className="space-y-8">
-            <OrdersTable orders={orders || []} isAdmin={true} />
+            <OrdersTable 
+              orders={orders || []} 
+              isAdmin={true}
+              searchTerm={searchTerm}
+              statusFilter={statusFilter}
+            />
             <CompletedOrdersTable 
               orders={orders || []} 
               onOrderClick={setSelectedCompletedOrder}
               onReuseOrder={handleReuseOrder}
-              isAdmin={true} 
+              isAdmin={true}
+              searchTerm={searchTerm}
+              statusFilter={statusFilter}
             />
           </div>
         )}

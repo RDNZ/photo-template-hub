@@ -9,15 +9,24 @@ interface CompletedOrdersTableProps {
   onOrderClick: (order: Order) => void;
   onReuseOrder: (order: Order) => void;
   isAdmin?: boolean;
+  searchTerm?: string;
+  statusFilter?: string;
 }
 
 export const CompletedOrdersTable = ({ 
   orders, 
   onOrderClick,
   onReuseOrder,
-  isAdmin = false 
+  isAdmin = false,
+  searchTerm = "",
+  statusFilter = "all"
 }: CompletedOrdersTableProps) => {
-  const completedOrders = orders.filter(order => order.status === 'completed');
+  const filteredOrders = orders.filter(order => {
+    const matchesSearch = order.event_name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = statusFilter === "all" || order.status === statusFilter;
+    const isCompleted = order.status === 'completed';
+    return matchesSearch && matchesStatus && isCompleted;
+  });
 
   return (
     <div className="space-y-4">
@@ -26,8 +35,8 @@ export const CompletedOrdersTable = ({
         <Table>
           <OrdersTableHeader isAdmin={isAdmin} showReuse={!isAdmin} />
           <TableBody>
-            {completedOrders.length > 0 ? (
-              completedOrders.map((order) => (
+            {filteredOrders.length > 0 ? (
+              filteredOrders.map((order) => (
                 <OrderTableRow
                   key={order.id}
                   order={order}

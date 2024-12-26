@@ -7,6 +7,7 @@ import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { ErrorState } from "@/components/dashboard/ErrorState";
 import { SuccessHandler } from "@/components/dashboard/SuccessHandler";
 import { OrderDetailsDialog } from "@/components/dashboard/OrderDetailsDialog";
+import { OrderSearch } from "@/components/dashboard/search/OrderSearch";
 import { useAuthCheck } from "@/hooks/useAuthCheck";
 import { useClientOrders } from "@/hooks/useClientOrders";
 import { Order } from "@/integrations/supabase/types/orders";
@@ -18,6 +19,8 @@ const ClientDashboard = () => {
   const isAuthChecking = useAuthCheck();
   const { data: orders, isLoading, error, refetch } = useClientOrders(isAuthChecking);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
 
   if (isAuthChecking) {
     return <LoadingSpinner message="Checking authentication..." />;
@@ -30,7 +33,6 @@ const ClientDashboard = () => {
 
   const handleReuseOrder = (order: Order) => {
     console.log("Reusing order:", order);
-    // Store complete order details in localStorage
     const orderToReuse = {
       event_name: order.event_name,
       software_type: order.software_type,
@@ -55,11 +57,23 @@ const ClientDashboard = () => {
       <div className="max-w-7xl mx-auto space-y-8">
         <DashboardHeader onNewOrder={() => navigate('/new-order')} />
         <SuccessHandler onSuccess={refetch} />
+        
+        <OrderSearch
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          filterStatus={statusFilter}
+          onFilterChange={setStatusFilter}
+        />
+
         {isLoading ? (
           <LoadingSpinner message="Loading orders..." />
         ) : (
           <>
-            <OrdersTable orders={orders || []} />
+            <OrdersTable 
+              orders={orders || []} 
+              searchTerm={searchTerm}
+              statusFilter={statusFilter}
+            />
             <CompletedOrdersTable 
               orders={orders || []} 
               onOrderClick={(order) => {
@@ -67,6 +81,8 @@ const ClientDashboard = () => {
                 setSelectedOrder(order);
               }}
               onReuseOrder={handleReuseOrder}
+              searchTerm={searchTerm}
+              statusFilter={statusFilter}
             />
           </>
         )}
