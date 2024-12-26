@@ -40,6 +40,7 @@ export const OrdersTable = ({ orders, isAdmin = false }: OrdersTableProps) => {
         order={selectedOrder}
         isOpen={!!selectedOrder}
         onClose={() => setSelectedOrder(null)}
+        isAdmin={isAdmin}
       />
     </>
   );

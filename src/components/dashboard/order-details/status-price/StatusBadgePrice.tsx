@@ -6,42 +6,33 @@ interface StatusBadgePriceProps {
 }
 
 export const StatusBadgePrice = ({ status, price }: StatusBadgePriceProps) => {
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(price);
-  };
-
-  const getStatusBadgeVariant = (status: string) => {
+  const getStatusColor = (status: string) => {
     switch (status) {
-      case "submitted":
-        return "default";
-      case "in_progress":
-        return "secondary";
-      case "preview_ready":
-        return "outline";
-      case "in_revision":
-        return "destructive";
-      case "completed":
-        return "secondary";
+      case 'submitted':
+        return 'bg-yellow-500/10 text-yellow-500 hover:bg-yellow-500/20';
+      case 'in_progress':
+        return 'bg-blue-500/10 text-blue-500 hover:bg-blue-500/20';
+      case 'preview_ready':
+        return 'bg-purple-500/10 text-purple-500 hover:bg-purple-500/20';
+      case 'in_revision':
+        return 'bg-orange-500/10 text-orange-500 hover:bg-orange-500/20';
+      case 'completed':
+        return 'bg-green-500/10 text-green-500 hover:bg-green-500/20';
       default:
-        return "default";
+        return 'bg-gray-500/10 text-gray-500 hover:bg-gray-500/20';
     }
   };
 
+  const formatStatus = (status: string) => {
+    return status.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  };
+
   return (
-    <div className="flex justify-between items-center">
-      <div>
-        <span className="text-muted-foreground mr-2">Status:</span>
-        <Badge variant={getStatusBadgeVariant(status)}>
-          {status.replace(/_/g, ' ')}
-        </Badge>
-      </div>
-      <div>
-        <span className="text-muted-foreground mr-2">Price:</span>
-        <span className="font-semibold">{formatPrice(price)}</span>
-      </div>
+    <div className="flex items-center justify-between">
+      <Badge className={`${getStatusColor(status)}`}>
+        {formatStatus(status)}
+      </Badge>
+      <span className="font-semibold">${(price / 100).toFixed(2)}</span>
     </div>
   );
 };

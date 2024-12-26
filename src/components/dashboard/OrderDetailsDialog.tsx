@@ -17,9 +17,15 @@ interface OrderDetailsDialogProps {
   order: Order | null;
   isOpen: boolean;
   onClose: () => void;
+  isAdmin?: boolean;
 }
 
-export const OrderDetailsDialog = ({ order, isOpen, onClose }: OrderDetailsDialogProps) => {
+export const OrderDetailsDialog = ({ 
+  order, 
+  isOpen, 
+  onClose,
+  isAdmin = false 
+}: OrderDetailsDialogProps) => {
   const [imageUrls, setImageUrls] = useState<string[]>([]);
 
   useEffect(() => {
@@ -57,6 +63,7 @@ export const OrderDetailsDialog = ({ order, isOpen, onClose }: OrderDetailsDialo
               orderId={order.id}
               status={order.status} 
               price={order.price}
+              isAdmin={isAdmin}
             />
             <OrderBasicInfo order={order} />
             <OrderAdditionalDetails details={order.details} />
@@ -71,6 +78,7 @@ export const OrderDetailsDialog = ({ order, isOpen, onClose }: OrderDetailsDialo
               previewImage={order.preview_image}
               previewFeedback={order.preview_feedback}
               hideStatusPrice
+              isAdmin={isAdmin}
             />
           </div>
         </ScrollArea>
