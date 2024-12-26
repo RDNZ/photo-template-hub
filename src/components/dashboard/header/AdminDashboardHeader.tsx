@@ -21,23 +21,26 @@ export const AdminDashboardHeader = ({ onRefresh }: AdminDashboardHeaderProps) =
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-4 w-full sm:w-auto">
         <Button 
           onClick={() => navigate('/analytics')} 
-          className="dashboard-button-secondary"
+          variant="outline"
+          className="flex items-center justify-center gap-2 h-10 px-4 hover:bg-brand-teal hover:text-white transition-colors"
         >
-          <BarChart3 className="h-4 w-4 text-brand-teal" />
+          <BarChart3 className="h-4 w-4" />
           Analytics
         </Button>
         <Button 
           onClick={onRefresh} 
-          className="dashboard-button-secondary"
+          variant="outline"
+          className="flex items-center justify-center gap-2 h-10 px-4 hover:bg-brand-teal hover:text-white transition-colors"
         >
-          <RefreshCw className="h-4 w-4 text-brand-teal" />
+          <RefreshCw className="h-4 w-4" />
           Refresh Data
         </Button>
         <Button 
           onClick={handleSignOut} 
-          className="dashboard-button-secondary"
+          variant="outline"
+          className="flex items-center justify-center gap-2 h-10 px-4 hover:bg-brand-teal hover:text-white transition-colors"
         >
-          <LogOut className="h-4 w-4 text-brand-teal" />
+          <LogOut className="h-4 w-4" />
           Sign Out
         </Button>
       </div>
