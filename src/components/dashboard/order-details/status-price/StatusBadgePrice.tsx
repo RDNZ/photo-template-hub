@@ -27,12 +27,20 @@ export const StatusBadgePrice = ({ status, price }: StatusBadgePriceProps) => {
     return status.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
   };
 
+  // Price is stored in cents, so we need to format it as dollars
+  const formattedPrice = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(price / 100);
+
   return (
     <div className="flex items-center justify-between">
       <Badge className={`${getStatusColor(status)}`}>
         {formatStatus(status)}
       </Badge>
-      <span className="font-semibold">${(price / 100).toFixed(2)}</span>
+      <span className="font-semibold">{formattedPrice}</span>
     </div>
   );
 };
