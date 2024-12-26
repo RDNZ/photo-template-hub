@@ -24,7 +24,7 @@ export const OrderDialogContent = ({
   
   return (
     <DialogContent className="max-w-3xl h-[85vh] flex flex-col bg-background">
-      <OrderHeader eventName={order.event_name} />
+      <OrderHeader />
       
       <ScrollArea className="flex-1">
         <div className="space-y-8 p-6">
