@@ -7,12 +7,14 @@ import { EmptyState } from "./table/EmptyState";
 interface CompletedOrdersTableProps {
   orders: Order[];
   onOrderClick: (order: Order) => void;
+  onReuseOrder: (order: Order) => void;
   isAdmin?: boolean;
 }
 
 export const CompletedOrdersTable = ({ 
   orders, 
   onOrderClick,
+  onReuseOrder,
   isAdmin = false 
 }: CompletedOrdersTableProps) => {
   const completedOrders = orders.filter(order => order.status === 'completed');
@@ -22,7 +24,7 @@ export const CompletedOrdersTable = ({
       <h2 className="text-xl font-semibold">Completed Orders</h2>
       <div className="border rounded-lg overflow-hidden">
         <Table>
-          <OrdersTableHeader isAdmin={isAdmin} />
+          <OrdersTableHeader isAdmin={isAdmin} showReuse={!isAdmin} />
           <TableBody>
             {completedOrders.length > 0 ? (
               completedOrders.map((order) => (
@@ -30,7 +32,9 @@ export const CompletedOrdersTable = ({
                   key={order.id}
                   order={order}
                   onClick={() => onOrderClick(order)}
+                  onReuseOrder={() => onReuseOrder(order)}
                   isAdmin={isAdmin}
+                  showReuse={!isAdmin}
                 />
               ))
             ) : (

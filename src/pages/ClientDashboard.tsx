@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LoadingSpinner } from "@/components/dashboard/LoadingSpinner";
 import { OrdersTable } from "@/components/dashboard/OrdersTable";
@@ -5,13 +6,18 @@ import { CompletedOrdersTable } from "@/components/dashboard/CompletedOrdersTabl
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { ErrorState } from "@/components/dashboard/ErrorState";
 import { SuccessHandler } from "@/components/dashboard/SuccessHandler";
+import { OrderDetailsDialog } from "@/components/dashboard/OrderDetailsDialog";
 import { useAuthCheck } from "@/hooks/useAuthCheck";
 import { useClientOrders } from "@/hooks/useClientOrders";
+import { Order } from "@/integrations/supabase/types/orders";
+import { useToast } from "@/hooks/use-toast";
 
 const ClientDashboard = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const isAuthChecking = useAuthCheck();
   const { data: orders, isLoading, error, refetch } = useClientOrders(isAuthChecking);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
   if (isAuthChecking) {
     return <LoadingSpinner message="Checking authentication..." />;
@@ -21,6 +27,27 @@ const ClientDashboard = () => {
     console.error("Error in orders query:", error);
     return <ErrorState onRetry={() => refetch()} />;
   }
+
+  const handleReuseOrder = (order: Order) => {
+    console.log("Reusing order:", order);
+    // Store order details in localStorage for the new order form
+    const orderToReuse = {
+      event_name: order.event_name,
+      software_type: order.software_type,
+      dimensions: order.dimensions,
+      turnaround_time: order.turnaround_time,
+      details: order.details,
+      photo_boxes: order.photo_boxes,
+      darkroom_file: order.darkroom_file,
+      price: order.price
+    };
+    localStorage.setItem('reuseOrder', JSON.stringify(orderToReuse));
+    toast({
+      title: "Order details saved",
+      description: "You can now create a new order with these details.",
+    });
+    navigate('/new-order');
+  };
 
   return (
     <div className="min-h-screen p-8">
@@ -36,10 +63,18 @@ const ClientDashboard = () => {
               orders={orders || []} 
               onOrderClick={(order) => {
                 console.log("Opening completed order details:", order);
-              }} 
+                setSelectedOrder(order);
+              }}
+              onReuseOrder={handleReuseOrder}
             />
           </>
         )}
+
+        <OrderDetailsDialog
+          order={selectedOrder}
+          isOpen={!!selectedOrder}
+          onClose={() => setSelectedOrder(null)}
+        />
       </div>
     </div>
   );

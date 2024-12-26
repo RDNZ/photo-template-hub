@@ -1,22 +1,32 @@
 import { TableCell, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
 import { Order } from "@/integrations/supabase/types/orders";
 import { formatPrice, formatTurnaroundTime } from "../utils/tableFormatters";
 import { OrderStatusSelect } from "./status/OrderStatusSelect";
 import { PreviewUploadButton } from "./preview/PreviewUploadButton";
 import { OrderStatusBadge } from "./status/OrderStatusBadge";
+import { Copy } from "lucide-react";
 
 interface OrderTableRowProps {
   order: Order;
   onClick: () => void;
+  onReuseOrder?: () => void;
   isAdmin?: boolean;
+  showReuse?: boolean;
 }
 
-export const OrderTableRow = ({ order, onClick, isAdmin = false }: OrderTableRowProps) => {
+export const OrderTableRow = ({ 
+  order, 
+  onClick, 
+  onReuseOrder,
+  isAdmin = false,
+  showReuse = false
+}: OrderTableRowProps) => {
   return (
     <TableRow 
       className="cursor-pointer hover:bg-muted/50" 
       onClick={(e) => {
-        if ((e.target as HTMLElement).closest('.status-select, .preview-upload')) {
+        if ((e.target as HTMLElement).closest('.status-select, .preview-upload, .reuse-button')) {
           e.stopPropagation();
           return;
         }
@@ -56,6 +66,19 @@ export const OrderTableRow = ({ order, onClick, isAdmin = false }: OrderTableRow
           <OrderStatusBadge status={order.status} />
         )}
       </TableCell>
+      {showReuse && (
+        <TableCell>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="reuse-button"
+            onClick={onReuseOrder}
+          >
+            <Copy className="h-4 w-4 mr-2" />
+            Reuse
+          </Button>
+        </TableCell>
+      )}
     </TableRow>
   );
 };

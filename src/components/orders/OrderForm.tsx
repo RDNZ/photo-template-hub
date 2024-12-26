@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { Form } from "@/components/ui/form";
 import { OrderFormValues } from "@/lib/schemas/orderSchema";
 import { OrderFormFields } from "./OrderFormFields";
@@ -21,6 +21,19 @@ export const OrderForm = ({ onSubmit, isSubmitting, onCancel }: OrderFormProps) 
   const softwareType = form.watch("software_type");
   const turnaroundTime = form.watch("turnaround_time");
   const darkroomFile = form.watch("darkroom_file");
+
+  useEffect(() => {
+    // Check for reused order data in localStorage
+    const reuseOrderData = localStorage.getItem('reuseOrder');
+    if (reuseOrderData) {
+      const orderData = JSON.parse(reuseOrderData);
+      Object.entries(orderData).forEach(([key, value]) => {
+        form.setValue(key as keyof OrderFormValues, value);
+      });
+      // Clear the localStorage after using the data
+      localStorage.removeItem('reuseOrder');
+    }
+  }, [form]);
 
   const totalPrice = useMemo(() => {
     if (!softwareType || !turnaroundTime) return 0;

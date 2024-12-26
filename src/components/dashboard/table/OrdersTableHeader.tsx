@@ -6,9 +6,10 @@ import {
 
 interface OrdersTableHeaderProps {
   isAdmin?: boolean;
+  showReuse?: boolean;
 }
 
-export const OrdersTableHeader = ({ isAdmin = false }: OrdersTableHeaderProps) => (
+export const OrdersTableHeader = ({ isAdmin = false, showReuse = false }: OrdersTableHeaderProps) => (
   <TableHeader>
     <TableRow>
       {isAdmin && (
@@ -26,6 +27,7 @@ export const OrdersTableHeader = ({ isAdmin = false }: OrdersTableHeaderProps) =
       <TableHead className="border-r border-muted/30">Details</TableHead>
       <TableHead className="border-r border-muted/30">Price</TableHead>
       <TableHead>Status</TableHead>
+      {showReuse && <TableHead>Actions</TableHead>}
     </TableRow>
   </TableHeader>
 );
