@@ -26,9 +26,9 @@ export const OrderForm = ({ onSubmit, isSubmitting, onCancel }: OrderFormProps) 
     // Check for reused order data in localStorage
     const reuseOrderData = localStorage.getItem('reuseOrder');
     if (reuseOrderData) {
-      const orderData = JSON.parse(reuseOrderData);
+      const orderData = JSON.parse(reuseOrderData) as Partial<OrderFormValues>;
       Object.entries(orderData).forEach(([key, value]) => {
-        form.setValue(key as keyof OrderFormValues, value);
+        form.setValue(key as keyof OrderFormValues, value as any);
       });
       // Clear the localStorage after using the data
       localStorage.removeItem('reuseOrder');

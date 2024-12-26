@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { OrderDetailsDialog } from "@/components/dashboard/OrderDetailsDialog";
+import { Order } from "@/integrations/supabase/types/orders";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -92,6 +93,23 @@ const Dashboard = () => {
     navigate("/");
   };
 
+  const handleReuseOrder = (order: Order) => {
+    console.log("Admin reusing order:", order);
+    // Store order details in localStorage for the new order form
+    const orderToReuse = {
+      event_name: order.event_name,
+      software_type: order.software_type,
+      dimensions: order.dimensions,
+      turnaround_time: order.turnaround_time,
+      details: order.details,
+      photo_boxes: order.photo_boxes,
+      darkroomFile: order.darkroom_file,
+      price: order.price
+    };
+    localStorage.setItem('reuseOrder', JSON.stringify(orderToReuse));
+    navigate('/new-order');
+  };
+
   return (
     <div className="min-h-screen p-8">
       <div className="max-w-7xl mx-auto space-y-8">
@@ -129,6 +147,7 @@ const Dashboard = () => {
             <CompletedOrdersTable 
               orders={orders || []} 
               onOrderClick={setSelectedCompletedOrder}
+              onReuseOrder={handleReuseOrder}
               isAdmin={true} 
             />
           </div>
