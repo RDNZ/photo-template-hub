@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { OrderDetailsDialog } from "@/components/dashboard/OrderDetailsDialog";
 import { OrderSearch } from "@/components/dashboard/search/OrderSearch";
 import { Order } from "@/integrations/supabase/types/orders";
+import { BarChart3 } from "lucide-react";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -106,9 +107,19 @@ const Dashboard = () => {
       <div className="max-w-7xl mx-auto space-y-8">
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-          <Button onClick={handleSignOut} variant="outline">
-            Sign Out
-          </Button>
+          <div className="flex gap-4">
+            <Button 
+              onClick={() => navigate('/analytics')} 
+              variant="outline"
+              className="flex items-center gap-2"
+            >
+              <BarChart3 className="h-4 w-4" />
+              Analytics
+            </Button>
+            <Button onClick={handleSignOut} variant="outline">
+              Sign Out
+            </Button>
+          </div>
         </div>
 
         <OrderSearch
