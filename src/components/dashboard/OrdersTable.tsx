@@ -35,9 +35,9 @@ export const OrdersTable = ({
         field?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     const matchesStatus = statusFilter === "all" || order.status === statusFilter;
-    const isCurrentOrder = order.status !== 'completed';
+    const isCurrentOrder = !['completed'].includes(order.status);
     
-    console.log(`Order ${order.id} - Current: ${isCurrentOrder}, Matches Search: ${matchesSearch}, Matches Status: ${matchesStatus}`);
+    console.log(`Order ${order.id} - Status: ${order.status}, Is Current: ${isCurrentOrder}, Matches Search: ${matchesSearch}, Matches Status: ${matchesStatus}`);
     
     return matchesSearch && matchesStatus && isCurrentOrder;
   });

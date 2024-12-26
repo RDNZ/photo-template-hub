@@ -37,7 +37,7 @@ export const CompletedOrdersTable = ({
     const matchesStatus = statusFilter === "all" || order.status === statusFilter;
     const isCompleted = order.status === 'completed';
     
-    console.log(`Order ${order.id} - Completed: ${isCompleted}, Matches Search: ${matchesSearch}, Matches Status: ${matchesStatus}`);
+    console.log(`Order ${order.id} - Status: ${order.status}, Is Completed: ${isCompleted}, Matches Search: ${matchesSearch}, Matches Status: ${matchesStatus}`);
     
     return matchesSearch && matchesStatus && isCompleted;
   });
