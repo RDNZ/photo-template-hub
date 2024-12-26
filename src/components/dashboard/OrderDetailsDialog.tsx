@@ -53,18 +53,18 @@ export const OrderDetailsDialog = ({ order, isOpen, onClose }: OrderDetailsDialo
         </DialogHeader>
         <ScrollArea className="flex-1">
           <div className="space-y-6 px-1 py-4">
-            <OrderBasicInfo order={order} />
-            <OrderAdditionalDetails details={order.details} />
-            <OrderReferenceImages 
-              imageUrls={imageUrls} 
-              referenceImages={order.reference_images as any[]} 
-            />
             <OrderStatusPrice 
               orderId={order.id}
               status={order.status} 
               price={order.price}
               previewImage={order.preview_image}
               previewFeedback={order.preview_feedback}
+            />
+            <OrderBasicInfo order={order} />
+            <OrderAdditionalDetails details={order.details} />
+            <OrderReferenceImages 
+              imageUrls={imageUrls} 
+              referenceImages={order.reference_images as any[]} 
             />
           </div>
         </ScrollArea>
