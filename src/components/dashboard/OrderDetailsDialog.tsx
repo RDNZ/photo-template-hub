@@ -48,11 +48,11 @@ export const OrderDetailsDialog = ({ order, isOpen, onClose }: OrderDetailsDialo
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-3xl h-[85vh] flex flex-col">
-        <DialogHeader>
+        <DialogHeader className="px-6 pt-6">
           <DialogTitle>Order Details - {order.event_name}</DialogTitle>
         </DialogHeader>
-        <ScrollArea className="flex-1">
-          <div className="space-y-6 px-1 py-4">
+        <ScrollArea className="flex-1 px-6">
+          <div className="space-y-6 py-4 pr-4">
             <OrderStatusPrice 
               orderId={order.id}
               status={order.status} 
