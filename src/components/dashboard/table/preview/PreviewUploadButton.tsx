@@ -31,17 +31,32 @@ export const PreviewUploadButton = ({ orderId }: PreviewUploadButtonProps) => {
       const fileName = `${orderId}_preview.${fileExt}`;
 
       console.log("Uploading file to storage:", fileName);
-      const { error: uploadError } = await supabase.storage
+      
+      // First, try to remove any existing file to avoid conflicts
+      await supabase.storage
         .from('preview_images')
-        .upload(fileName, file);
+        .remove([fileName]);
 
-      if (uploadError) throw uploadError;
+      // Upload the new file
+      const { error: uploadError, data: uploadData } = await supabase.storage
+        .from('preview_images')
+        .upload(fileName, file, {
+          cacheControl: '0',
+          upsert: true
+        });
 
+      if (uploadError) {
+        console.error("Upload error:", uploadError);
+        throw uploadError;
+      }
+
+      console.log("File uploaded successfully, getting public URL");
+      
       const { data: { publicUrl } } = supabase.storage
         .from('preview_images')
         .getPublicUrl(fileName);
 
-      console.log("File uploaded successfully, updating order with public URL:", publicUrl);
+      console.log("Generated public URL:", publicUrl);
       
       const { error: updateError } = await supabase
         .from('orders')
@@ -51,11 +66,14 @@ export const PreviewUploadButton = ({ orderId }: PreviewUploadButtonProps) => {
         })
         .eq('id', orderId);
 
-      if (updateError) throw updateError;
+      if (updateError) {
+        console.error("Update error:", updateError);
+        throw updateError;
+      }
 
       console.log("Order updated successfully with preview image and status");
       
-      // Invalidate both queries to ensure UI updates properly
+      // Invalidate queries to refresh the UI
       queryClient.invalidateQueries({ queryKey: ['adminOrders'] });
       
       toast({
