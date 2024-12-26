@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { OrdersTable } from "@/components/dashboard/OrdersTable";
+import { CompletedOrdersTable } from "@/components/dashboard/CompletedOrdersTable";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -11,10 +12,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { OrderDetailsDialog } from "@/components/dashboard/OrderDetailsDialog";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [selectedCompletedOrder, setSelectedCompletedOrder] = useState(null);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -91,15 +94,15 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen p-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
+      <div className="max-w-7xl mx-auto space-y-8">
+        <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold">Admin Dashboard</h1>
           <Button onClick={handleSignOut} variant="outline">
             Sign Out
           </Button>
         </div>
 
-        <div className="mb-6">
+        <div>
           <label className="block text-sm font-medium mb-2">Filter by Status</label>
           <Select
             value={statusFilter}
@@ -121,8 +124,22 @@ const Dashboard = () => {
         {isLoading ? (
           <p>Loading orders...</p>
         ) : (
-          <OrdersTable orders={orders || []} isAdmin={true} />
+          <div className="space-y-8">
+            <OrdersTable orders={orders || []} isAdmin={true} />
+            <CompletedOrdersTable 
+              orders={orders || []} 
+              onOrderClick={setSelectedCompletedOrder}
+              isAdmin={true} 
+            />
+          </div>
         )}
+
+        <OrderDetailsDialog
+          order={selectedCompletedOrder}
+          isOpen={!!selectedCompletedOrder}
+          onClose={() => setSelectedCompletedOrder(null)}
+          isAdmin={true}
+        />
       </div>
     </div>
   );

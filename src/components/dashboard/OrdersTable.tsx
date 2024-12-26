@@ -13,27 +13,31 @@ interface OrdersTableProps {
 
 export const OrdersTable = ({ orders, isAdmin = false }: OrdersTableProps) => {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const currentOrders = orders.filter(order => order.status !== 'completed');
 
   return (
     <>
-      <div className="border rounded-lg overflow-hidden">
-        <Table>
-          <OrdersTableHeader isAdmin={isAdmin} />
-          <TableBody>
-            {orders.length > 0 ? (
-              orders.map((order) => (
-                <OrderTableRow
-                  key={order.id}
-                  order={order}
-                  onClick={() => setSelectedOrder(order)}
-                  isAdmin={isAdmin}
-                />
-              ))
-            ) : (
-              <EmptyState />
-            )}
-          </TableBody>
-        </Table>
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold">Current Orders</h2>
+        <div className="border rounded-lg overflow-hidden">
+          <Table>
+            <OrdersTableHeader isAdmin={isAdmin} />
+            <TableBody>
+              {currentOrders.length > 0 ? (
+                currentOrders.map((order) => (
+                  <OrderTableRow
+                    key={order.id}
+                    order={order}
+                    onClick={() => setSelectedOrder(order)}
+                    isAdmin={isAdmin}
+                  />
+                ))
+              ) : (
+                <EmptyState />
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </div>
 
       <OrderDetailsDialog
