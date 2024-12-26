@@ -123,11 +123,6 @@
     @apply bg-white border border-brand-teal text-brand-teal 
            hover:bg-brand-teal hover:text-white;
   }
-
-  .dashboard-button-accent {
-    @apply bg-[#F25F43] text-white hover:bg-[#F04230] 
-           shadow-sm hover:shadow-md transition-all duration-300;
-  }
 }
 
 @keyframes fadeIn {

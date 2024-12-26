@@ -104,12 +104,10 @@ export const OrderCard = ({
       </CardContent>
       <CardFooter className="flex flex-wrap gap-2">
         <Button
-          variant="outline"
-          size="sm"
+          className="flex-1 bg-[#F25F43] text-white hover:bg-[#F04230] shadow-sm hover:shadow-md transition-all duration-300"
           onClick={onClick}
-          className="flex-1 dashboard-button dashboard-button-accent"
         >
-          <Eye className="h-4 w-4 text-white" />
+          <Eye className="h-4 w-4" />
           View Details
         </Button>
         {isAdmin && order.status === 'in_progress' && (
