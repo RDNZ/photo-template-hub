@@ -1,9 +1,4 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Download, X } from "lucide-react";
 import { ImageDetails } from "../types";
@@ -14,42 +9,44 @@ interface ImagePreviewDialogProps {
   onDownload: (url: string, filename: string) => void;
 }
 
-export const ImagePreviewDialog = ({ 
-  selectedImage, 
+export const ImagePreviewDialog = ({
+  selectedImage,
   onClose,
-  onDownload 
+  onDownload,
 }: ImagePreviewDialogProps) => {
   if (!selectedImage) return null;
 
   return (
     <Dialog open={!!selectedImage} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden">
-        <DialogHeader className="relative">
-          <DialogTitle>{selectedImage.name}</DialogTitle>
-          <Button
-            size="icon"
-            variant="ghost"
-            className="absolute right-0 top-0"
-            onClick={onClose}
-          >
-            <X className="h-4 w-4" />
-            <span className="sr-only">Close</span>
-          </Button>
-        </DialogHeader>
-        <div className="relative flex items-center justify-center p-4 w-full h-full">
-          <img
-            src={selectedImage.url}
-            alt={selectedImage.name}
-            className="rounded-lg max-w-full max-h-[70vh] object-contain"
-          />
-          <Button
-            size="icon"
-            variant="secondary"
-            className="absolute top-2 right-2"
-            onClick={() => onDownload(selectedImage.url, selectedImage.name)}
-          >
-            <Download className="h-4 w-4" />
-          </Button>
+      <DialogContent className="max-w-4xl h-[85vh] flex flex-col bg-background p-0">
+        <div className="relative w-full">
+          <div className="absolute top-4 right-4 flex items-center gap-2 z-10">
+            <Button
+              variant="secondary"
+              size="icon"
+              onClick={() => onDownload(selectedImage.url, selectedImage.name)}
+              className="bg-white/90 hover:bg-white"
+            >
+              <Download className="h-4 w-4" />
+              <span className="sr-only">Download image</span>
+            </Button>
+            <Button
+              variant="secondary"
+              size="icon"
+              onClick={onClose}
+              className="bg-white/90 hover:bg-white"
+            >
+              <X className="h-4 w-4" />
+              <span className="sr-only">Close dialog</span>
+            </Button>
+          </div>
+          <div className="h-[85vh] w-full flex items-center justify-center p-4">
+            <img
+              src={selectedImage.url}
+              alt={selectedImage.name}
+              className="max-h-full max-w-full object-contain rounded-lg"
+            />
+          </div>
         </div>
       </DialogContent>
     </Dialog>
