@@ -16,12 +16,11 @@ export const ImageGridItem = ({
 }: ImageGridItemProps) => {
   return (
     <div className="relative group rounded-lg overflow-hidden bg-muted cursor-pointer">
-      <div className="relative aspect-square">
+      <div className="relative aspect-square" onClick={onImageClick}>
         <img
           src={url}
           alt={fileName}
           className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
-          onClick={onImageClick}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
         <div className="absolute bottom-0 left-0 right-0 p-2 text-white text-sm truncate opacity-0 group-hover:opacity-100 transition-opacity duration-200">

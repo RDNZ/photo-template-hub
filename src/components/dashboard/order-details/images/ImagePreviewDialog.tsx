@@ -5,7 +5,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Download } from "lucide-react";
+import { Download, X } from "lucide-react";
 import { ImageDetails } from "../types";
 
 interface ImagePreviewDialogProps {
@@ -24,8 +24,17 @@ export const ImagePreviewDialog = ({
   return (
     <Dialog open={!!selectedImage} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden">
-        <DialogHeader>
+        <DialogHeader className="relative">
           <DialogTitle>{selectedImage.name}</DialogTitle>
+          <Button
+            size="icon"
+            variant="ghost"
+            className="absolute right-0 top-0"
+            onClick={onClose}
+          >
+            <X className="h-4 w-4" />
+            <span className="sr-only">Close</span>
+          </Button>
         </DialogHeader>
         <div className="relative flex items-center justify-center p-4 w-full h-full">
           <img
