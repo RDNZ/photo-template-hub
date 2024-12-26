@@ -184,7 +184,7 @@ const Index = () => {
                     inputBorderHover: '#3AAFA9',
                     inputBorderFocus: '#3AAFA9',
                   },
-                  borderRadii: {
+                  borderRadius: {
                     buttonBorderRadius: '0.5rem',
                     inputBorderRadius: '0.5rem',
                   },
