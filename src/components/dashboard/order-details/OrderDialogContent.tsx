@@ -29,7 +29,7 @@ export const OrderDialogContent = ({
           <OrderStatusPrice 
             orderId={order.id}
             status={order.status} 
-            price={order.price / 100}
+            price={order.price}
             isAdmin={isAdmin}
           />
           <OrderBasicInfo order={order} />
@@ -41,7 +41,7 @@ export const OrderDialogContent = ({
           <OrderStatusPrice 
             orderId={order.id}
             status={order.status} 
-            price={order.price / 100}
+            price={order.price}
             previewImage={order.preview_image}
             previewFeedback={order.preview_feedback}
             hideStatusPrice
