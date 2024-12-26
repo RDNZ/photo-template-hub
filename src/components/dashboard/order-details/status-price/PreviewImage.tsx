@@ -4,12 +4,14 @@ import { useToast } from "@/hooks/use-toast";
 
 interface PreviewImageProps {
   previewImage: string;
+  onClick: () => void;
 }
 
-export const PreviewImage = ({ previewImage }: PreviewImageProps) => {
+export const PreviewImage = ({ previewImage, onClick }: PreviewImageProps) => {
   const { toast } = useToast();
 
-  const handlePreviewDownload = async () => {
+  const handlePreviewDownload = async (e: React.MouseEvent) => {
+    e.stopPropagation();
     try {
       const response = await fetch(previewImage);
       const blob = await response.blob();
@@ -32,20 +34,24 @@ export const PreviewImage = ({ previewImage }: PreviewImageProps) => {
   };
 
   return (
-    <div className="relative group">
-      <img 
-        src={previewImage} 
-        alt="Preview" 
-        className="rounded-lg w-full object-cover max-h-[300px]"
-      />
+    <div className="relative group cursor-pointer" onClick={onClick}>
+      <div className="relative">
+        <img 
+          src={previewImage} 
+          alt="Preview" 
+          className="rounded-lg w-full h-48 object-cover"
+        />
+        <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white p-2 truncate">
+          Preview Image
+        </div>
+      </div>
       <Button
-        size="sm"
+        size="icon"
         variant="secondary"
         className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
         onClick={handlePreviewDownload}
       >
-        <Download className="h-4 w-4 mr-2" />
-        Download
+        <Download className="h-4 w-4" />
       </Button>
     </div>
   );
