@@ -19,6 +19,7 @@ export type Database = {
           final_file: string | null
           id: string
           photo_boxes: number | null
+          preview_feedback: string | null
           preview_image: string | null
           price: number
           reference_images: Json | null
@@ -37,6 +38,7 @@ export type Database = {
           final_file?: string | null
           id?: string
           photo_boxes?: number | null
+          preview_feedback?: string | null
           preview_image?: string | null
           price: number
           reference_images?: Json | null
@@ -55,6 +57,7 @@ export type Database = {
           final_file?: string | null
           id?: string
           photo_boxes?: number | null
+          preview_feedback?: string | null
           preview_image?: string | null
           price?: number
           reference_images?: Json | null
