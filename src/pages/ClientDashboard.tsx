@@ -30,7 +30,7 @@ const ClientDashboard = () => {
 
   const handleReuseOrder = (order: Order) => {
     console.log("Reusing order:", order);
-    // Store order details in localStorage for the new order form
+    // Store complete order details in localStorage
     const orderToReuse = {
       event_name: order.event_name,
       software_type: order.software_type,
@@ -39,7 +39,8 @@ const ClientDashboard = () => {
       details: order.details,
       photo_boxes: order.photo_boxes,
       darkroom_file: order.darkroom_file,
-      price: order.price
+      price: order.price,
+      email: order.profiles?.email
     };
     localStorage.setItem('reuseOrder', JSON.stringify(orderToReuse));
     toast({

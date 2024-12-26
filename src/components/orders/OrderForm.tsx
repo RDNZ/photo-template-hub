@@ -26,10 +26,22 @@ export const OrderForm = ({ onSubmit, isSubmitting, onCancel }: OrderFormProps) 
     // Check for reused order data in localStorage
     const reuseOrderData = localStorage.getItem('reuseOrder');
     if (reuseOrderData) {
-      const orderData = JSON.parse(reuseOrderData) as Partial<OrderFormValues>;
-      Object.entries(orderData).forEach(([key, value]) => {
-        form.setValue(key as keyof OrderFormValues, value as any);
-      });
+      try {
+        const orderData = JSON.parse(reuseOrderData) as Partial<OrderFormValues>;
+        console.log("Pre-populating form with order data:", orderData);
+        
+        // Set each field individually to ensure proper type handling
+        if (orderData.event_name) form.setValue("event_name", orderData.event_name);
+        if (orderData.software_type) form.setValue("software_type", orderData.software_type);
+        if (orderData.dimensions) form.setValue("dimensions", orderData.dimensions);
+        if (orderData.turnaround_time) form.setValue("turnaround_time", orderData.turnaround_time);
+        if (orderData.details) form.setValue("details", orderData.details);
+        if (orderData.photo_boxes) form.setValue("photo_boxes", orderData.photo_boxes);
+        if (orderData.darkroom_file !== undefined) form.setValue("darkroom_file", orderData.darkroom_file);
+        if (orderData.email) form.setValue("email", orderData.email);
+      } catch (error) {
+        console.error("Error parsing reused order data:", error);
+      }
       // Clear the localStorage after using the data
       localStorage.removeItem('reuseOrder');
     }

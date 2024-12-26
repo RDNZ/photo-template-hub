@@ -95,7 +95,7 @@ const Dashboard = () => {
 
   const handleReuseOrder = (order: Order) => {
     console.log("Admin reusing order:", order);
-    // Store order details in localStorage for the new order form
+    // Store complete order details in localStorage
     const orderToReuse = {
       event_name: order.event_name,
       software_type: order.software_type,
@@ -103,8 +103,9 @@ const Dashboard = () => {
       turnaround_time: order.turnaround_time,
       details: order.details,
       photo_boxes: order.photo_boxes,
-      darkroomFile: order.darkroom_file,
-      price: order.price
+      darkroom_file: order.darkroom_file,
+      price: order.price,
+      email: order.profiles?.email
     };
     localStorage.setItem('reuseOrder', JSON.stringify(orderToReuse));
     navigate('/new-order');
