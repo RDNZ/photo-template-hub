@@ -21,6 +21,7 @@ export type Order = {
   reference_images: Json | null;
   photo_boxes: number | null;
   darkroom_file: boolean | null;
+  preview_feedback: string | null;
   profiles?: OrderProfile | null;
 };
 
@@ -38,6 +39,7 @@ export type OrderInsert = {
   reference_images?: Json | null;
   photo_boxes?: number | null;
   darkroom_file?: boolean | null;
+  preview_feedback?: string | null;
 };
 
 export type OrderUpdate = {
@@ -54,4 +56,5 @@ export type OrderUpdate = {
   reference_images?: Json | null;
   photo_boxes?: number | null;
   darkroom_file?: boolean | null;
+  preview_feedback?: string | null;
 };
