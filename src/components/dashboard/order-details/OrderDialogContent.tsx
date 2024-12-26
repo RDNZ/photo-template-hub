@@ -40,22 +40,24 @@ export const OrderDialogContent = ({
             referenceImages={order.reference_images as any[]} 
           />
           {order.preview_image && (
-            <OrderStatusPrice 
-              orderId={order.id}
-              status={order.status} 
-              price={order.price}
-              previewImage={order.preview_image}
-              previewFeedback={order.preview_feedback}
-              hideStatusPrice
-              isAdmin={isAdmin}
-            />
-          )}
-          {order.preview_feedback && (
-            <div className="mt-4 p-4 bg-muted rounded-lg">
-              <h3 className="font-semibold mb-2">Client Feedback</h3>
-              <p className="text-sm text-muted-foreground whitespace-pre-wrap">
-                {order.preview_feedback}
-              </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <OrderStatusPrice 
+                orderId={order.id}
+                status={order.status} 
+                price={order.price}
+                previewImage={order.preview_image}
+                previewFeedback={order.preview_feedback}
+                hideStatusPrice
+                isAdmin={isAdmin}
+              />
+              {order.preview_feedback && (
+                <div className="p-4 bg-muted rounded-lg">
+                  <h3 className="font-semibold mb-2">Client Feedback</h3>
+                  <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                    {order.preview_feedback}
+                  </p>
+                </div>
+              )}
             </div>
           )}
         </div>
