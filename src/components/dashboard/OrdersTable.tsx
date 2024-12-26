@@ -1,10 +1,7 @@
 import { useState } from "react";
-import { Table, TableBody } from "@/components/ui/table";
 import { OrderDetailsDialog } from "./OrderDetailsDialog";
 import { Order } from "@/integrations/supabase/types/orders";
-import { OrdersTableHeader } from "./table/OrdersTableHeader";
-import { OrderTableRow } from "./table/OrderTableRow";
-import { EmptyState } from "./table/EmptyState";
+import { OrderCardsGrid } from "./cards/OrderCardsGrid";
 
 interface OrdersTableProps {
   orders: Order[];
@@ -44,25 +41,11 @@ export const OrdersTable = ({
     <>
       <div className="space-y-4">
         <h2 className="text-xl font-semibold">Current Orders</h2>
-        <div className="border rounded-lg overflow-hidden">
-          <Table>
-            <OrdersTableHeader isAdmin={isAdmin} />
-            <TableBody>
-              {filteredOrders.length > 0 ? (
-                filteredOrders.map((order) => (
-                  <OrderTableRow
-                    key={order.id}
-                    order={order}
-                    onClick={() => setSelectedOrder(order)}
-                    isAdmin={isAdmin}
-                  />
-                ))
-              ) : (
-                <EmptyState />
-              )}
-            </TableBody>
-          </Table>
-        </div>
+        <OrderCardsGrid
+          orders={filteredOrders}
+          onOrderClick={setSelectedOrder}
+          isAdmin={isAdmin}
+        />
       </div>
 
       <OrderDetailsDialog
