@@ -22,7 +22,19 @@ export const CompletedOrdersTable = ({
   statusFilter = "all"
 }: CompletedOrdersTableProps) => {
   const filteredOrders = orders.filter(order => {
-    const matchesSearch = order.event_name.toLowerCase().includes(searchTerm.toLowerCase());
+    const searchFields = [
+      order.event_name,
+      order.software_type,
+      order.dimensions,
+      order.details,
+      isAdmin ? order.profiles?.name : null,
+      isAdmin ? order.profiles?.email : null
+    ].filter(Boolean);
+
+    const matchesSearch = searchTerm === "" || 
+      searchFields.some(field => 
+        field?.toLowerCase().includes(searchTerm.toLowerCase())
+      );
     const matchesStatus = statusFilter === "all" || order.status === statusFilter;
     const isCompleted = order.status === 'completed';
     return matchesSearch && matchesStatus && isCompleted;
