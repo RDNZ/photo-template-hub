@@ -74,3 +74,68 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .dashboard-card {
+    @apply bg-brand-gray-light rounded-xl shadow-md hover:shadow-lg transition-all duration-300 
+           hover:-translate-y-1 border border-brand-teal/10;
+  }
+
+  .status-badge {
+    @apply px-3 py-1 rounded-full text-sm font-medium text-white;
+  }
+
+  .status-badge-submitted {
+    @apply bg-brand-teal;
+  }
+
+  .status-badge-in-progress {
+    @apply bg-brand-orange;
+  }
+
+  .status-badge-preview-ready {
+    @apply bg-purple-500;
+  }
+
+  .status-badge-completed {
+    @apply bg-green-500;
+  }
+
+  .section-header {
+    @apply text-2xl font-bold text-brand-gray-dark flex items-center gap-2 mb-4;
+  }
+
+  .section-card {
+    @apply bg-white/50 backdrop-blur-sm rounded-xl shadow-md border border-brand-teal/10 
+           p-6 hover:border-brand-teal/20 transition-colors duration-300;
+  }
+
+  .dashboard-button {
+    @apply rounded-lg px-4 py-2 font-medium transition-all duration-300 
+           flex items-center gap-2 hover:shadow-md disabled:opacity-50;
+  }
+
+  .dashboard-button-primary {
+    @apply bg-brand-teal text-white hover:bg-brand-teal/90;
+  }
+
+  .dashboard-button-secondary {
+    @apply bg-white border border-brand-teal text-brand-teal 
+           hover:bg-brand-teal hover:text-white;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}

@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Search } from "lucide-react";
+import { Search, Filter } from "lucide-react";
 import { OrderSearch } from "./OrderSearch";
 
 interface SearchCardProps {
@@ -16,10 +16,10 @@ export const SearchCard = ({
   onFilterChange,
 }: SearchCardProps) => {
   return (
-    <Card className="bg-brand-gray-light">
+    <Card className="section-card bg-gradient-to-br from-brand-teal/5 to-transparent">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-brand-gray-dark">
-          <Search className="h-5 w-5 text-brand-teal" />
+        <CardTitle className="section-header">
+          <Search className="h-6 w-6 text-brand-teal" />
           Search & Filter Orders
         </CardTitle>
       </CardHeader>

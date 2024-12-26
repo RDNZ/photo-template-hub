@@ -5,7 +5,7 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Eye, Upload, Copy } from "lucide-react";
 import { OrderStatusSelect } from "../table/status/OrderStatusSelect";
 import { PreviewUploadButton } from "../table/preview/PreviewUploadButton";
-import { formatPrice, formatTurnaroundTime, getStatusBadgeVariant } from "../utils/tableFormatters";
+import { formatPrice, formatTurnaroundTime } from "../utils/tableFormatters";
 
 interface OrderCardProps {
   order: Order;
@@ -22,8 +22,23 @@ export const OrderCard = ({
   isAdmin = false,
   showReuse = false 
 }: OrderCardProps) => {
+  const getStatusClass = (status: string) => {
+    switch (status) {
+      case 'submitted':
+        return 'status-badge-submitted';
+      case 'in_progress':
+        return 'status-badge-in-progress';
+      case 'preview_ready':
+        return 'status-badge-preview-ready';
+      case 'completed':
+        return 'status-badge-completed';
+      default:
+        return 'bg-gray-500';
+    }
+  };
+
   return (
-    <Card className="h-full transition-all hover:shadow-md bg-brand-gray-light">
+    <Card className="dashboard-card animate-fade-in">
       <CardHeader className="space-y-2">
         <div className="flex items-start justify-between">
           <div className="space-y-1">
@@ -45,7 +60,7 @@ export const OrderCard = ({
               />
             </div>
           ) : (
-            <Badge variant={getStatusBadgeVariant(order.status)}>
+            <Badge className={`status-badge ${getStatusClass(order.status)}`}>
               {order.status.replace(/_/g, ' ')}
             </Badge>
           )}
@@ -92,9 +107,9 @@ export const OrderCard = ({
           variant="outline"
           size="sm"
           onClick={onClick}
-          className="flex-1 hover:bg-brand-teal hover:text-white"
+          className="flex-1 dashboard-button-secondary"
         >
-          <Eye className="h-4 w-4 mr-2 text-brand-teal" />
+          <Eye className="h-4 w-4 text-brand-teal" />
           View Details
         </Button>
         {isAdmin && order.status === 'in_progress' && (
@@ -107,9 +122,9 @@ export const OrderCard = ({
             variant="outline"
             size="sm"
             onClick={onReuseOrder}
-            className="flex-1 reuse-button hover:bg-brand-teal hover:text-white"
+            className="flex-1 reuse-button dashboard-button-secondary"
           >
-            <Copy className="h-4 w-4 mr-2 text-brand-teal" />
+            <Copy className="h-4 w-4 text-brand-teal" />
             Reuse
           </Button>
         )}

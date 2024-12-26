@@ -21,12 +21,12 @@ export const OrdersSection = ({
 }: OrdersSectionProps) => {
   return (
     <Card className={cn(
-      "bg-brand-gray-light",
-      "transition-colors duration-200"
+      "section-card",
+      "bg-gradient-to-br from-brand-teal/5 to-transparent"
     )}>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-brand-gray-dark">
-          <ClipboardList className="h-5 w-5 text-brand-teal" />
+        <CardTitle className="section-header">
+          <ClipboardList className="h-6 w-6 text-brand-teal" />
           {title}
         </CardTitle>
       </CardHeader>
