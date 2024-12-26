@@ -83,6 +83,7 @@ export const OrderStatusPrice = ({
       
       // Invalidate queries to refresh the UI
       queryClient.invalidateQueries({ queryKey: ['adminOrders'] });
+      queryClient.invalidateQueries({ queryKey: ['clientOrders'] });
       
       toast({
         title: "Success",

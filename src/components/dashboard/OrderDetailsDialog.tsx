@@ -12,6 +12,7 @@ import { OrderBasicInfo } from "./order-details/OrderBasicInfo";
 import { OrderAdditionalDetails } from "./order-details/OrderAdditionalDetails";
 import { OrderReferenceImages } from "./order-details/OrderReferenceImages";
 import { OrderStatusPrice } from "./order-details/OrderStatusPrice";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface OrderDetailsDialogProps {
   order: Order | null;
@@ -27,6 +28,38 @@ export const OrderDetailsDialog = ({
   isAdmin = false 
 }: OrderDetailsDialogProps) => {
   const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const queryClient = useQueryClient();
+
+  // Subscribe to real-time updates for the order
+  useEffect(() => {
+    if (!order?.id) return;
+
+    console.log("Setting up real-time subscription for order:", order.id);
+    
+    const channel = supabase
+      .channel(`order_updates_${order.id}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'orders',
+          filter: `id=eq.${order.id}`,
+        },
+        (payload) => {
+          console.log("Received real-time update for order:", payload);
+          // Invalidate and refetch the queries to update the UI
+          queryClient.invalidateQueries({ queryKey: ['clientOrders'] });
+          queryClient.invalidateQueries({ queryKey: ['adminOrders'] });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      console.log("Cleaning up real-time subscription");
+      supabase.removeChannel(channel);
+    };
+  }, [order?.id, queryClient]);
 
   useEffect(() => {
     const loadImages = async () => {
