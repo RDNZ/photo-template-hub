@@ -39,7 +39,7 @@ export const OrderSearch = ({
             <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Statuses</SelectItem>
+            <SelectItem value="all">All</SelectItem>
             <SelectItem value="submitted">Submitted</SelectItem>
             <SelectItem value="in_progress">In Progress</SelectItem>
             <SelectItem value="preview_ready">Preview Ready</SelectItem>
