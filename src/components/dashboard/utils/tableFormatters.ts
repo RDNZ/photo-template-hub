@@ -23,6 +23,8 @@ export const getStatusBadgeVariant = (status: string) => {
       return "secondary";
     case "preview_ready":
       return "outline";
+    case "in_revision":
+      return "destructive";
     case "completed":
       return "secondary";
     default:

@@ -55,6 +55,7 @@ export const OrderStatusSelect = ({ orderId, currentStatus }: OrderStatusSelectP
         <SelectItem value="submitted">Submitted</SelectItem>
         <SelectItem value="in_progress">In Progress</SelectItem>
         <SelectItem value="preview_ready">Preview Ready</SelectItem>
+        <SelectItem value="in_revision">In Revision</SelectItem>
         <SelectItem value="completed">Completed</SelectItem>
       </SelectContent>
     </Select>
