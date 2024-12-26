@@ -1,10 +1,12 @@
-import { DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { DialogContent } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Order } from "@/integrations/supabase/types/orders";
-import { OrderBasicInfo } from "./OrderBasicInfo";
-import { OrderAdditionalDetails } from "./OrderAdditionalDetails";
+import { OrderHeader } from "./sections/OrderHeader";
+import { OrderEventDetails } from "./sections/OrderEventDetails";
+import { OrderSpecifications } from "./sections/OrderSpecifications";
+import { OrderAdditionalInfo } from "./sections/OrderAdditionalInfo";
 import { OrderReferenceImages } from "./OrderReferenceImages";
-import { OrderStatusPrice } from "./OrderStatusPrice";
+import { OrderStatusPrice } from "./status-price/OrderStatusPrice";
 
 interface OrderDialogContentProps {
   order: Order;
@@ -22,23 +24,38 @@ export const OrderDialogContent = ({
   
   return (
     <DialogContent className="max-w-3xl h-[85vh] flex flex-col">
-      <DialogHeader className="px-6 pt-6">
-        <DialogTitle>Order Details - {order.event_name}</DialogTitle>
-      </DialogHeader>
+      <OrderHeader eventName={order.event_name} />
+      
       <ScrollArea className="flex-1 px-6">
-        <div className="space-y-6 py-4 pr-4">
+        <div className="space-y-8 py-6 pr-4">
           <OrderStatusPrice 
             orderId={order.id}
             status={order.status} 
             price={order.price || 0} 
             isAdmin={isAdmin}
           />
-          <OrderBasicInfo order={order} />
-          <OrderAdditionalDetails details={order.details} />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <OrderEventDetails 
+              eventName={order.event_name}
+              softwareType={order.software_type}
+              dimensions={order.dimensions}
+            />
+            
+            <OrderSpecifications 
+              photoBoxes={order.photo_boxes || 1}
+              darkroomFile={order.darkroom_file || false}
+              turnaroundTime={order.turnaround_time}
+            />
+          </div>
+
+          <OrderAdditionalInfo details={order.details} />
+
           <OrderReferenceImages 
             imageUrls={imageUrls} 
             referenceImages={order.reference_images as any[]} 
           />
+
           {order.preview_image && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <OrderStatusPrice 

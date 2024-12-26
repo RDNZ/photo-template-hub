@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Camera } from "lucide-react";
 import { ImageDetails } from "./types";
 import { ImageGrid } from "./images/ImageGrid";
 import { ImagePreviewDialog } from "./images/ImagePreviewDialog";
@@ -16,9 +17,12 @@ export const OrderReferenceImages = ({
 
   if (!referenceImages || referenceImages.length === 0) {
     return (
-      <div>
-        <h3 className="font-semibold mb-2">Reference Images</h3>
-        <p>No reference images provided.</p>
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold flex items-center gap-2">
+          <Camera className="h-5 w-5" />
+          Reference Images
+        </h3>
+        <p className="text-sm text-muted-foreground">No reference images provided.</p>
       </div>
     );
   }
@@ -41,8 +45,11 @@ export const OrderReferenceImages = ({
   };
 
   return (
-    <div>
-      <h3 className="font-semibold mb-2">Reference Images</h3>
+    <div className="space-y-4">
+      <h3 className="text-lg font-semibold flex items-center gap-2">
+        <Camera className="h-5 w-5" />
+        Reference Images
+      </h3>
       <ImageGrid
         imageUrls={imageUrls}
         referenceImages={referenceImages}
