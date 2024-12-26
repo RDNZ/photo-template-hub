@@ -94,7 +94,7 @@ export const OrderCard = ({
           onClick={onClick}
           className="flex-1 hover:bg-brand-teal hover:text-white"
         >
-          <Eye className="h-4 w-4 mr-2" />
+          <Eye className="h-4 w-4 mr-2 text-brand-teal" />
           View Details
         </Button>
         {isAdmin && order.status === 'in_progress' && (
@@ -109,7 +109,7 @@ export const OrderCard = ({
             onClick={onReuseOrder}
             className="flex-1 reuse-button hover:bg-brand-teal hover:text-white"
           >
-            <Copy className="h-4 w-4 mr-2" />
+            <Copy className="h-4 w-4 mr-2 text-brand-teal" />
             Reuse
           </Button>
         )}

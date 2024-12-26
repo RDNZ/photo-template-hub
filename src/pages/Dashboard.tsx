@@ -2,15 +2,13 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { OrdersTable } from "@/components/dashboard/OrdersTable";
-import { CompletedOrdersTable } from "@/components/dashboard/CompletedOrdersTable";
-import { Button } from "@/components/ui/button";
 import { OrderDetailsDialog } from "@/components/dashboard/OrderDetailsDialog";
-import { OrderSearch } from "@/components/dashboard/search/OrderSearch";
 import { Order } from "@/integrations/supabase/types/orders";
-import { BarChart3, RefreshCw, LogOut, ClipboardList, Search } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import { RefreshCw } from "lucide-react";
+import { AdminDashboardHeader } from "@/components/dashboard/header/AdminDashboardHeader";
+import { SearchCard } from "@/components/dashboard/search/SearchCard";
+import { OrdersSection } from "@/components/dashboard/orders/OrdersSection";
+import { CompletedOrdersSection } from "@/components/dashboard/orders/CompletedOrdersSection";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -82,11 +80,6 @@ const Dashboard = () => {
     checkAuth();
   }, [navigate]);
 
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    navigate("/");
-  };
-
   const handleReuseOrder = (order: Order) => {
     console.log("Admin reusing order:", order);
     const orderToReuse = {
@@ -107,103 +100,37 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen p-4 sm:p-8 bg-background">
       <div className="max-w-7xl mx-auto space-y-6">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <h1 className="text-2xl sm:text-3xl font-bold">Admin Dashboard</h1>
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-4 w-full sm:w-auto">
-            <Button 
-              onClick={() => navigate('/analytics')} 
-              variant="outline"
-              className="flex items-center justify-center gap-2"
-            >
-              <BarChart3 className="h-4 w-4" />
-              Analytics
-            </Button>
-            <Button 
-              onClick={() => refetch()} 
-              variant="outline"
-              className="flex items-center justify-center gap-2"
-            >
-              <RefreshCw className="h-4 w-4" />
-              Refresh Data
-            </Button>
-            <Button 
-              onClick={handleSignOut} 
-              variant="outline"
-              className="flex items-center justify-center gap-2"
-            >
-              <LogOut className="h-4 w-4" />
-              Sign Out
-            </Button>
-          </div>
-        </div>
-
-        <Card className="bg-card">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Search className="h-5 w-5" />
-              Search & Filter Orders
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-muted-foreground mb-4">
-              Manage and track all orders here. You can filter by status or search by event name.
-            </p>
-            <OrderSearch
-              searchTerm={searchTerm}
-              onSearchChange={setSearchTerm}
-              filterStatus={statusFilter}
-              onFilterChange={setStatusFilter}
-            />
-          </CardContent>
-        </Card>
+        <AdminDashboardHeader onRefresh={refetch} />
+        
+        <SearchCard
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          filterStatus={statusFilter}
+          onFilterChange={setStatusFilter}
+        />
 
         {isLoading ? (
           <div className="flex items-center justify-center p-8">
-            <RefreshCw className="h-6 w-6 animate-spin" />
+            <RefreshCw className="h-6 w-6 animate-spin text-brand-teal" />
           </div>
         ) : (
           <div className="space-y-6">
-            <Card className={cn(
-              "bg-card",
-              "transition-colors duration-200"
-            )}>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <ClipboardList className="h-5 w-5" />
-                  Current Orders
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <OrdersTable 
-                  orders={orders || []} 
-                  isAdmin={true}
-                  searchTerm={searchTerm}
-                  statusFilter={statusFilter}
-                />
-              </CardContent>
-            </Card>
+            <OrdersSection 
+              title="Current Orders"
+              orders={orders || []}
+              isAdmin={true}
+              searchTerm={searchTerm}
+              statusFilter={statusFilter}
+            />
 
-            <Card className={cn(
-              "bg-card",
-              "transition-colors duration-200"
-            )}>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <ClipboardList className="h-5 w-5" />
-                  Completed Orders
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CompletedOrdersTable 
-                  orders={orders || []} 
-                  onOrderClick={setSelectedCompletedOrder}
-                  onReuseOrder={handleReuseOrder}
-                  isAdmin={true}
-                  searchTerm={searchTerm}
-                  statusFilter={statusFilter}
-                />
-              </CardContent>
-            </Card>
+            <CompletedOrdersSection 
+              orders={orders || []}
+              onOrderClick={setSelectedCompletedOrder}
+              onReuseOrder={handleReuseOrder}
+              isAdmin={true}
+              searchTerm={searchTerm}
+              statusFilter={statusFilter}
+            />
           </div>
         )}
 
