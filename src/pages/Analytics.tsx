@@ -45,8 +45,8 @@ const Analytics = () => {
     Math.round((analytics.completedOrders / analytics.totalOrders) * 100) : 0;
 
   return (
-    <div className="min-h-screen p-8">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <div className="min-h-screen p-4 sm:p-8">
+      <div className="max-w-7xl mx-auto space-y-6">
         <AnalyticsHeader onRefresh={refetch} />
         
         <MetricsGrid 
@@ -56,7 +56,7 @@ const Analytics = () => {
           totalRevenue={analytics?.totalRevenue || 0}
         />
 
-        <Card>
+        <Card className="bg-card">
           <CardHeader>
             <CardTitle>Orders Per Month</CardTitle>
           </CardHeader>
