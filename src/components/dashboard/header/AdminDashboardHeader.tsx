@@ -16,15 +16,15 @@ export const AdminDashboardHeader = ({ onRefresh }: AdminDashboardHeaderProps) =
   };
 
   return (
-    <div className="bg-brand-teal rounded-lg mb-6">
-      <div className="px-6 py-8">
+    <div className="dashboard-header">
+      <div className="dashboard-header-content">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <h1 className="text-2xl sm:text-3xl font-bold text-white">Admin Dashboard</h1>
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-4 w-full sm:w-auto">
+          <h1 className="dashboard-header-title">Admin Dashboard</h1>
+          <div className="dashboard-header-buttons">
             <Button 
               onClick={() => navigate('/analytics')} 
               variant="secondary"
-              className="flex items-center justify-center gap-2 bg-white/90 hover:bg-white text-brand-teal transition-colors"
+              className="dashboard-header-button"
             >
               <BarChart3 className="h-4 w-4" />
               Analytics
@@ -32,7 +32,7 @@ export const AdminDashboardHeader = ({ onRefresh }: AdminDashboardHeaderProps) =
             <Button 
               onClick={onRefresh} 
               variant="secondary"
-              className="flex items-center justify-center gap-2 bg-white/90 hover:bg-white text-brand-teal transition-colors"
+              className="dashboard-header-button"
             >
               <RefreshCw className="h-4 w-4" />
               Refresh Data
@@ -40,7 +40,7 @@ export const AdminDashboardHeader = ({ onRefresh }: AdminDashboardHeaderProps) =
             <Button 
               onClick={handleSignOut} 
               variant="secondary"
-              className="flex items-center justify-center gap-2 bg-white/90 hover:bg-white text-brand-teal transition-colors"
+              className="dashboard-header-button"
             >
               <LogOut className="h-4 w-4" />
               Sign Out

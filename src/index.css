@@ -24,14 +24,6 @@
     --input: 0 0% 90%;
     --ring: 174 48% 46%;
     --radius: 0.5rem;
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 0 0% 20%;
-    --sidebar-primary: 174 48% 46%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 96%;
-    --sidebar-accent-foreground: 0 0% 20%;
-    --sidebar-border: 0 0% 90%;
-    --sidebar-ring: 174 48% 46%;
   }
 
   .dark {
@@ -54,14 +46,6 @@
     --border: 0 0% 25%;
     --input: 0 0% 25%;
     --ring: 174 48% 46%;
-    --sidebar-background: 0 0% 20%;
-    --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 174 48% 46%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 25%;
-    --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 0 0% 25%;
-    --sidebar-ring: 174 48% 46%;
   }
 }
 
@@ -73,12 +57,55 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  h1 {
+    @apply text-3xl font-bold text-brand-gray-dark;
+  }
+
+  h2 {
+    @apply text-2xl font-bold text-brand-gray-dark;
+  }
+
+  h3 {
+    @apply text-xl font-bold text-brand-gray-dark;
+  }
 }
 
 @layer components {
+  .dashboard-header {
+    @apply bg-brand-teal rounded-lg mb-6 overflow-hidden;
+  }
+
+  .dashboard-header-content {
+    @apply px-6 py-8;
+  }
+
+  .dashboard-header-title {
+    @apply text-2xl sm:text-3xl font-bold text-white;
+  }
+
+  .dashboard-header-buttons {
+    @apply flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-4 w-full sm:w-auto;
+  }
+
+  .dashboard-header-button {
+    @apply flex items-center justify-center gap-2 bg-white/90 hover:bg-white text-brand-teal transition-colors;
+  }
+
   .dashboard-card {
-    @apply bg-brand-gray-light rounded-xl shadow-md hover:shadow-lg transition-all duration-300 
-           hover:-translate-y-1 border border-brand-teal/10;
+    @apply bg-card rounded-lg border border-border shadow-sm hover:shadow-md transition-all duration-300;
+  }
+
+  .dashboard-section {
+    @apply space-y-4;
+  }
+
+  .section-header {
+    @apply flex items-center gap-2 text-lg font-semibold text-brand-gray-dark mb-4;
+  }
+
+  .section-icon {
+    @apply h-5 w-5 text-brand-teal;
   }
 
   .status-badge {
@@ -101,27 +128,64 @@
     @apply bg-green-500;
   }
 
-  .section-header {
-    @apply text-2xl font-bold text-brand-gray-dark flex items-center gap-2 mb-4;
+  .primary-button {
+    @apply bg-brand-teal text-white hover:bg-brand-teal/90 transition-colors 
+           rounded-lg px-4 py-2 font-medium flex items-center gap-2;
   }
 
-  .section-card {
-    @apply bg-white/50 backdrop-blur-sm rounded-xl shadow-md border border-brand-teal/10 
-           p-6 hover:border-brand-teal/20 transition-colors duration-300;
-  }
-
-  .dashboard-button {
-    @apply rounded-lg px-4 py-2 font-medium transition-all duration-300 
-           flex items-center gap-2 hover:shadow-md disabled:opacity-50;
-  }
-
-  .dashboard-button-primary {
-    @apply bg-brand-teal text-white hover:bg-brand-teal/90;
-  }
-
-  .dashboard-button-secondary {
+  .secondary-button {
     @apply bg-white border border-brand-teal text-brand-teal 
-           hover:bg-brand-teal hover:text-white;
+           hover:bg-brand-teal hover:text-white transition-colors
+           rounded-lg px-4 py-2 font-medium flex items-center gap-2;
+  }
+
+  .accent-button {
+    @apply bg-brand-orange text-white hover:bg-brand-orange/90 transition-colors
+           rounded-lg px-4 py-2 font-medium flex items-center gap-2;
+  }
+
+  .form-label {
+    @apply block text-sm font-medium text-brand-gray-dark mb-1;
+  }
+
+  .form-input {
+    @apply w-full rounded-md border border-input bg-background px-3 py-2
+           text-sm ring-offset-background placeholder:text-muted-foreground
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring;
+  }
+
+  .form-select {
+    @apply w-full rounded-md border border-input bg-background px-3 py-2
+           text-sm ring-offset-background focus-visible:outline-none
+           focus-visible:ring-2 focus-visible:ring-ring;
+  }
+
+  .alert-success {
+    @apply bg-green-50 text-green-800 rounded-lg p-4 mb-4;
+  }
+
+  .alert-error {
+    @apply bg-red-50 text-red-800 rounded-lg p-4 mb-4;
+  }
+
+  .modal-content {
+    @apply bg-background p-6 rounded-lg shadow-lg max-w-2xl w-full mx-4;
+  }
+
+  .modal-header {
+    @apply flex items-center justify-between mb-4;
+  }
+
+  .modal-title {
+    @apply text-xl font-bold text-brand-gray-dark;
+  }
+
+  .modal-body {
+    @apply space-y-4;
+  }
+
+  .modal-footer {
+    @apply flex justify-end gap-4 mt-6;
   }
 }
 

@@ -12,28 +12,33 @@ export const AnalyticsHeader = ({ onRefresh }: AnalyticsHeaderProps) => {
   const isMobile = useIsMobile();
   
   return (
-    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-      <h1 className="text-2xl sm:text-3xl font-bold text-brand-gray-dark">Analytics Dashboard</h1>
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-4 w-full sm:w-auto">
-        <Button 
-          onClick={() => navigate('/dashboard')} 
-          variant="outline"
-          className="flex items-center justify-center gap-2 hover:bg-brand-teal hover:text-white"
-          size={isMobile ? "lg" : "default"}
-        >
-          <ClipboardList className="h-4 w-4" />
-          View Orders
-        </Button>
-        <Button 
-          onClick={onRefresh} 
-          variant="outline" 
-          size={isMobile ? "lg" : "sm"}
-          className="flex items-center justify-center gap-2 hover:bg-brand-teal hover:text-white"
-        >
-          <RefreshCw className="h-4 w-4" />
-          Refresh Data
-        </Button>
+    <div className="dashboard-header">
+      <div className="dashboard-header-content">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <h1 className="dashboard-header-title">Analytics Dashboard</h1>
+          <div className="dashboard-header-buttons">
+            <Button 
+              onClick={() => navigate('/dashboard')} 
+              variant="secondary"
+              className="dashboard-header-button"
+              size={isMobile ? "lg" : "default"}
+            >
+              <ClipboardList className="h-4 w-4" />
+              View Orders
+            </Button>
+            <Button 
+              onClick={onRefresh} 
+              variant="secondary"
+              className="dashboard-header-button"
+              size={isMobile ? "lg" : "default"}
+            >
+              <RefreshCw className="h-4 w-4" />
+              Refresh Data
+            </Button>
+          </div>
+        </div>
       </div>
+      <div className="h-3 bg-gradient-to-b from-brand-teal/20 to-transparent rounded-b-lg" />
     </div>
   );
 };

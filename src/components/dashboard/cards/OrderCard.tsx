@@ -104,7 +104,7 @@ export const OrderCard = ({
       </CardContent>
       <CardFooter className="flex flex-wrap gap-2">
         <Button
-          className="flex-1 bg-[#F25F43] text-white hover:bg-[#F04230] shadow-sm hover:shadow-md transition-all duration-300"
+          className="flex-1 accent-button"
           onClick={onClick}
         >
           <Eye className="h-4 w-4" />
@@ -120,9 +120,9 @@ export const OrderCard = ({
             variant="outline"
             size="sm"
             onClick={onReuseOrder}
-            className="flex-1 reuse-button dashboard-button-secondary"
+            className="flex-1 secondary-button"
           >
-            <Copy className="h-4 w-4 text-brand-teal" />
+            <Copy className="h-4 w-4" />
             Reuse
           </Button>
         )}
