@@ -6,7 +6,7 @@ import { OrderEventDetails } from "./sections/OrderEventDetails";
 import { OrderSpecifications } from "./sections/OrderSpecifications";
 import { OrderAdditionalInfo } from "./sections/OrderAdditionalInfo";
 import { OrderReferenceImages } from "./OrderReferenceImages";
-import { OrderStatusPrice } from "./status-price/OrderStatusPrice";
+import { OrderStatusPrice } from "./OrderStatusPrice";
 
 interface OrderDialogContentProps {
   order: Order;
