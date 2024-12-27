@@ -9,12 +9,15 @@ import { AdminDashboardHeader } from "@/components/dashboard/header/AdminDashboa
 import { SearchCard } from "@/components/dashboard/search/SearchCard";
 import { OrdersSection } from "@/components/dashboard/orders/OrdersSection";
 import { CompletedOrdersSection } from "@/components/dashboard/orders/CompletedOrdersSection";
+import { useToast } from "@/hooks/use-toast";
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [selectedCompletedOrder, setSelectedCompletedOrder] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [isAuthChecking, setIsAuthChecking] = useState(true);
 
   const { data: orders, isLoading, refetch } = useQuery({
     queryKey: ["adminOrders", statusFilter],
@@ -39,46 +42,89 @@ const Dashboard = () => {
 
       return data;
     },
+    enabled: !isAuthChecking,
   });
 
   useEffect(() => {
     const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        console.log("No session found");
+      try {
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        
+        if (sessionError) {
+          console.error("Session error:", sessionError);
+          throw sessionError;
+        }
+
+        if (!session) {
+          console.log("No session found");
+          navigate("/");
+          return;
+        }
+
+        const { data: profile, error: profileError } = await supabase
+          .from("profiles")
+          .select("role")
+          .eq("id", session.user.id)
+          .single();
+
+        if (profileError) {
+          console.error("Profile fetch error:", profileError);
+          toast({
+            variant: "destructive",
+            title: "Error",
+            description: "Failed to fetch user profile. Please try logging in again.",
+          });
+          await supabase.auth.signOut();
+          navigate("/");
+          return;
+        }
+
+        if (!profile) {
+          console.log("No profile found");
+          navigate("/");
+          return;
+        }
+
+        if (profile.role === 'client') {
+          console.log("Client user detected, redirecting to client dashboard");
+          navigate("/client-dashboard");
+          return;
+        }
+
+        if (profile.role !== "admin") {
+          console.log("User is not an admin");
+          navigate("/");
+          return;
+        }
+
+        console.log("Admin access confirmed");
+        setIsAuthChecking(false);
+      } catch (error) {
+        console.error("Auth check error:", error);
+        toast({
+          variant: "destructive",
+          title: "Authentication Error",
+          description: "Please try logging in again.",
+        });
+        await supabase.auth.signOut();
         navigate("/");
-        return;
       }
-
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("role")
-        .eq("id", session.user.id)
-        .single();
-
-      if (!profile) {
-        console.log("No profile found");
-        navigate("/");
-        return;
-      }
-
-      if (profile.role === 'client') {
-        console.log("Client user detected, redirecting to client dashboard");
-        navigate("/client-dashboard");
-        return;
-      }
-
-      if (profile.role !== "admin") {
-        console.log("User is not an admin");
-        navigate("/");
-        return;
-      }
-
-      console.log("Admin access confirmed");
     };
 
+    // Set up auth state change listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log("Auth state changed:", event);
+      if (event === 'SIGNED_OUT' || event === 'USER_DELETED') {
+        navigate("/");
+      }
+    });
+
     checkAuth();
-  }, [navigate]);
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [navigate, toast]);
 
   const handleReuseOrder = (order: Order) => {
     console.log("Admin reusing order:", order);
@@ -97,6 +143,14 @@ const Dashboard = () => {
     navigate('/new-order');
   };
 
+  if (isAuthChecking || isLoading) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <RefreshCw className="h-6 w-6 animate-spin text-brand-teal" />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen p-4 sm:p-8 bg-background">
       <div className="max-w-7xl mx-auto space-y-6">
@@ -109,30 +163,24 @@ const Dashboard = () => {
           onFilterChange={setStatusFilter}
         />
 
-        {isLoading ? (
-          <div className="flex items-center justify-center p-8">
-            <RefreshCw className="h-6 w-6 animate-spin text-brand-teal" />
-          </div>
-        ) : (
-          <div className="space-y-6">
-            <OrdersSection 
-              title="Current Orders"
-              orders={orders || []}
-              isAdmin={true}
-              searchTerm={searchTerm}
-              statusFilter={statusFilter}
-            />
+        <div className="space-y-6">
+          <OrdersSection 
+            title="Current Orders"
+            orders={orders || []}
+            isAdmin={true}
+            searchTerm={searchTerm}
+            statusFilter={statusFilter}
+          />
 
-            <CompletedOrdersSection 
-              orders={orders || []}
-              onOrderClick={setSelectedCompletedOrder}
-              onReuseOrder={handleReuseOrder}
-              isAdmin={true}
-              searchTerm={searchTerm}
-              statusFilter={statusFilter}
-            />
-          </div>
-        )}
+          <CompletedOrdersSection 
+            orders={orders || []}
+            onOrderClick={setSelectedCompletedOrder}
+            onReuseOrder={handleReuseOrder}
+            isAdmin={true}
+            searchTerm={searchTerm}
+            statusFilter={statusFilter}
+          />
+        </div>
 
         <OrderDetailsDialog
           order={selectedCompletedOrder}
