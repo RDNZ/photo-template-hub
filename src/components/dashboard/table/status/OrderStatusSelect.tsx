@@ -19,26 +19,40 @@ export const OrderStatusSelect = ({ orderId, currentStatus }: OrderStatusSelectP
   const { toast } = useToast();
 
   const handleStatusChange = async (newStatus: string) => {
+    console.log(`Updating order ${orderId} status to ${newStatus}`);
+    
     try {
       const { error } = await supabase
         .from('orders')
         .update({ status: newStatus })
         .eq('id', orderId);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error updating order status:', error);
+        toast({
+          variant: "destructive",
+          title: "Failed to update order status",
+          description: error.message,
+        });
+        throw error;
+      }
 
-      queryClient.invalidateQueries({ queryKey: ['adminOrders'] });
+      // Invalidate queries to refresh the UI
+      await queryClient.invalidateQueries({ queryKey: ['adminOrders'] });
+      await queryClient.invalidateQueries({ queryKey: ['analytics'] });
       
       toast({
         title: "Status updated",
         description: `Order status changed to ${newStatus.replace(/_/g, ' ')}`,
       });
-    } catch (error) {
-      console.error('Error updating order status:', error);
+      
+      console.log('Order status updated successfully');
+    } catch (error: any) {
+      console.error('Error in handleStatusChange:', error);
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to update order status",
+        description: "Failed to update order status. Please try again.",
       });
     }
   };
