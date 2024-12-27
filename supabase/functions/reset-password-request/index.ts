@@ -134,7 +134,7 @@ const handler = async (req: Request): Promise<Response> => {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       }
     );
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error in reset-password-request:", error);
     return new Response(
       JSON.stringify({ error: "Internal server error" }),
