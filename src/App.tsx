@@ -2,8 +2,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { StrictMode } from "react";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { StrictMode, useEffect } from "react";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import ClientDashboard from "./pages/ClientDashboard";
@@ -21,11 +21,33 @@ const queryClient = new QueryClient({
   },
 });
 
+// Title updater component
+const TitleUpdater = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    const pageTitles: { [key: string]: string } = {
+      "/": "Photo Template Hub",
+      "/dashboard": "Dashboard | Photo Template Hub",
+      "/client-dashboard": "My Dashboard | Photo Template Hub",
+      "/new-order": "New Order | Photo Template Hub",
+      "/profile": "Profile | Photo Template Hub",
+      "/settings": "Settings | Photo Template Hub",
+      "/analytics": "Analytics | Photo Template Hub",
+    };
+
+    document.title = pageTitles[location.pathname] || "Photo Template Hub";
+  }, [location]);
+
+  return null;
+};
+
 const App = () => (
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter basename="/">
         <TooltipProvider>
+          <TitleUpdater />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/dashboard" element={<Dashboard />} />
