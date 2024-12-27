@@ -19,23 +19,42 @@ export const OrderStatusSelect = ({ orderId, currentStatus }: OrderStatusSelectP
   const { toast } = useToast();
 
   const handleStatusChange = async (newStatus: string) => {
-    console.log(`Updating order ${orderId} status to ${newStatus}`);
+    console.log(`Attempting to update order ${orderId} status from ${currentStatus} to ${newStatus}`);
     
     try {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('orders')
         .update({ status: newStatus })
-        .eq('id', orderId);
+        .eq('id', orderId)
+        .select()
+        .single();
 
       if (error) {
-        console.error('Error updating order status:', error);
+        console.error('Error updating order status:', {
+          orderId,
+          currentStatus,
+          newStatus,
+          error: error.message,
+          details: error
+        });
+        
         toast({
           variant: "destructive",
           title: "Failed to update order status",
-          description: error.message,
+          description: `Error: ${error.message}. Please try again or contact support if the issue persists.`,
         });
         throw error;
       }
+
+      if (!data) {
+        throw new Error('No data returned after update');
+      }
+
+      console.log('Order status updated successfully:', {
+        orderId,
+        oldStatus: currentStatus,
+        newStatus: data.status
+      });
 
       // Invalidate queries to refresh the UI
       await queryClient.invalidateQueries({ queryKey: ['adminOrders'] });
@@ -45,10 +64,15 @@ export const OrderStatusSelect = ({ orderId, currentStatus }: OrderStatusSelectP
         title: "Status updated",
         description: `Order status changed to ${newStatus.replace(/_/g, ' ')}`,
       });
-      
-      console.log('Order status updated successfully');
     } catch (error: any) {
-      console.error('Error in handleStatusChange:', error);
+      console.error('Unexpected error in handleStatusChange:', {
+        orderId,
+        currentStatus,
+        newStatus,
+        error: error.message,
+        stack: error.stack
+      });
+      
       toast({
         variant: "destructive",
         title: "Error",

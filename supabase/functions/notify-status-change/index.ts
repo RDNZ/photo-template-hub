@@ -60,6 +60,11 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
+    if (!RESEND_API_KEY) {
+      console.error("RESEND_API_KEY is not set");
+      throw new Error("Server configuration error: Missing Resend API key");
+    }
+
     const payload: StatusChangePayload = await req.json();
     console.log("Received payload:", payload);
 
@@ -71,16 +76,27 @@ const handler = async (req: Request): Promise<Response> => {
       .single();
 
     if (orderError) {
-      console.error("Error fetching order:", orderError);
+      console.error("Error fetching order:", {
+        error: orderError,
+        orderId: payload.orderId
+      });
       throw new Error(`Failed to fetch order: ${orderError.message}`);
     }
 
     if (!order?.profiles?.email) {
-      console.error("No email found for user");
+      console.error("No email found for user:", {
+        orderId: payload.orderId,
+        order
+      });
       throw new Error("User email not found");
     }
 
     const { subject, html } = getStatusEmailContent(payload.newStatus, order.event_name);
+    console.log("Preparing to send email:", {
+      to: order.profiles.email,
+      subject,
+      status: payload.newStatus
+    });
 
     // Send email via Resend
     const emailRes = await fetch("https://api.resend.com/emails", {
@@ -97,23 +113,38 @@ const handler = async (req: Request): Promise<Response> => {
       }),
     });
 
+    const responseText = await emailRes.text();
+    console.log("Resend API response:", {
+      status: emailRes.status,
+      statusText: emailRes.statusText,
+      response: responseText
+    });
+
     if (!emailRes.ok) {
-      const error = await emailRes.text();
-      console.error("Resend API error:", error);
-      throw new Error(`Failed to send email: ${error}`);
+      console.error("Resend API error:", {
+        status: emailRes.status,
+        response: responseText
+      });
+      throw new Error(`Failed to send email: ${responseText}`);
     }
 
-    const emailData = await emailRes.json();
-    console.log("Email sent successfully:", emailData);
+    console.log("Email sent successfully");
 
     return new Response(JSON.stringify({ success: true }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
     });
   } catch (error: any) {
-    console.error("Error in notify-status-change function:", error);
+    console.error("Error in notify-status-change function:", {
+      error: error.message,
+      stack: error.stack
+    });
+    
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ 
+        error: error.message,
+        details: error.stack
+      }),
       {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
