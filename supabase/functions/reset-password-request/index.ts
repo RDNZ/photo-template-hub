@@ -20,6 +20,13 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
+    // Check if RESEND_API_KEY is set
+    if (!RESEND_API_KEY) {
+      console.error("RESEND_API_KEY is not set");
+      throw new Error("Missing RESEND_API_KEY");
+    }
+    console.log("RESEND_API_KEY is configured");
+
     const supabase = createClient(
       SUPABASE_URL!,
       SUPABASE_SERVICE_ROLE_KEY!,
@@ -53,6 +60,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     const matchedUser = user.users.find((u) => u.email === email);
     if (!matchedUser) {
+      console.log("No user found with this email");
       // Return success even if user not found for security
       return new Response(
         JSON.stringify({ success: true }),
@@ -62,6 +70,7 @@ const handler = async (req: Request): Promise<Response> => {
         }
       );
     }
+    console.log("User found, generating reset token");
 
     // Generate reset token
     const token = crypto.randomUUID();
@@ -81,16 +90,14 @@ const handler = async (req: Request): Promise<Response> => {
       console.error("Error inserting reset record:", insertError);
       throw insertError;
     }
+    console.log("Reset record created successfully");
 
     // Construct reset link
     const resetLink = `${req.headers.get("origin")}/reset-password?token=${token}`;
     console.log("Reset link generated:", resetLink);
 
     // Send email via Resend
-    if (!RESEND_API_KEY) {
-      throw new Error("Missing RESEND_API_KEY");
-    }
-
+    console.log("Attempting to send email via Resend...");
     const emailResponse = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -118,6 +125,7 @@ const handler = async (req: Request): Promise<Response> => {
       console.error("Error sending email:", error);
       throw new Error("Failed to send reset email");
     }
+    console.log("Reset email sent successfully via Resend");
 
     return new Response(
       JSON.stringify({ success: true }),
