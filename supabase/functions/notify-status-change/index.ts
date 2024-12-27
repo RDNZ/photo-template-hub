@@ -106,7 +106,7 @@ const handler = async (req: Request): Promise<Response> => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "Custom Photo Booth Templates <orders@customphotoboothtemplates.com>",
+        from: "Custom Photo Booth Templates <onboarding@resend.dev>",
         to: [order.profiles.email],
         subject,
         html,
