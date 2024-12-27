@@ -26,7 +26,7 @@ export const OrderStatusSelect = ({ orderId, currentStatus }: OrderStatusSelectP
         .from('orders')
         .update({ status: newStatus })
         .eq('id', orderId)
-        .select()
+        .select('*')
         .single();
 
       if (error) {
@@ -43,7 +43,7 @@ export const OrderStatusSelect = ({ orderId, currentStatus }: OrderStatusSelectP
           title: "Failed to update order status",
           description: `Error: ${error.message}. Please try again or contact support if the issue persists.`,
         });
-        throw error;
+        return;
       }
 
       if (!data) {
