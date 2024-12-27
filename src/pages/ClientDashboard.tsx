@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LoadingSpinner } from "@/components/dashboard/LoadingSpinner";
-import { OrdersTable } from "@/components/dashboard/OrdersTable";
-import { CompletedOrdersTable } from "@/components/dashboard/CompletedOrdersTable";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { ErrorState } from "@/components/dashboard/ErrorState";
 import { SuccessHandler } from "@/components/dashboard/SuccessHandler";
@@ -12,6 +10,8 @@ import { useAuthCheck } from "@/hooks/useAuthCheck";
 import { useClientOrders } from "@/hooks/useClientOrders";
 import { Order } from "@/integrations/supabase/types/orders";
 import { useToast } from "@/hooks/use-toast";
+import { OrdersSection } from "@/components/dashboard/orders/OrdersSection";
+import { CompletedOrdersSection } from "@/components/dashboard/orders/CompletedOrdersSection";
 
 const ClientDashboard = () => {
   const navigate = useNavigate();
@@ -68,13 +68,15 @@ const ClientDashboard = () => {
         {isLoading ? (
           <LoadingSpinner message="Loading orders..." />
         ) : (
-          <>
-            <OrdersTable 
+          <div className="space-y-8">
+            <OrdersSection 
+              title="Current Orders"
               orders={orders || []} 
               searchTerm={searchTerm}
               statusFilter={statusFilter}
             />
-            <CompletedOrdersTable 
+            
+            <CompletedOrdersSection 
               orders={orders || []} 
               onOrderClick={(order) => {
                 console.log("Opening completed order details:", order);
@@ -84,7 +86,7 @@ const ClientDashboard = () => {
               searchTerm={searchTerm}
               statusFilter={statusFilter}
             />
-          </>
+          </div>
         )}
 
         <OrderDetailsDialog
