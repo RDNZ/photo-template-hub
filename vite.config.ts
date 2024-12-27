@@ -10,9 +10,18 @@ export default defineConfig({
     },
   },
   server: {
-    historyApiFallback: true,
+    port: 8080,
+    host: "::",
+    proxy: {
+      // Redirect all 404s to index.html for client-side routing
+      "*": {
+        target: "http://localhost:8080",
+        changeOrigin: true,
+        rewrite: (path) => "/index.html",
+      },
+    },
   },
   preview: {
-    historyApiFallback: true,
+    port: 8080,
   },
 });
