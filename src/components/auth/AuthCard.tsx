@@ -38,6 +38,9 @@ export const AuthCard = () => (
         },
       }}
       providers={[]}
+      view="sign_in"
+      showLinks={true}
+      redirectTo={window.location.origin}
     />
     
     <p className="mt-6 text-center text-sm text-muted-foreground">
