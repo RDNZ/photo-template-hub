@@ -16,41 +16,25 @@ export const OrderStatusSelect = ({ orderId, currentStatus }: OrderStatusSelectP
     console.log(`Attempting to update order ${orderId} status from ${currentStatus} to ${newStatus}`);
 
     try {
-      // First update the order status
-      const { error: updateError } = await supabase
+      const { error } = await supabase
         .from('orders')
         .update({ status: newStatus })
         .eq('id', orderId);
 
-      if (updateError) {
+      if (error) {
         console.error("Error updating order status:", {
           orderId,
           currentStatus,
           newStatus,
-          error: updateError
+          error
         });
-        throw updateError;
-      }
-
-      // Then fetch the updated order to confirm the change
-      const { data: updatedOrder, error: fetchError } = await supabase
-        .from('orders')
-        .select()
-        .eq('id', orderId)
-        .maybeSingle();
-
-      if (fetchError) {
-        console.error("Error fetching updated order:", {
-          orderId,
-          error: fetchError
-        });
-        throw fetchError;
+        throw error;
       }
 
       console.log("Order status updated successfully:", {
         orderId,
         oldStatus: currentStatus,
-        newStatus: updatedOrder?.status
+        newStatus
       });
 
       // Invalidate queries to refresh the UI
