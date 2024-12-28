@@ -11,7 +11,7 @@ export const usePreviewUploader = ({ orderId }: PreviewUploaderProps) => {
   const { toast } = useToast();
 
   const handleNewPreviewUpload = async (file: File) => {
-    console.log("Uploading new preview for order:", orderId);
+    console.log("Starting preview upload for order:", orderId);
     
     const fileExt = file.name.split('.').pop();
     const fileName = `${orderId}_preview.${fileExt}`;
@@ -23,7 +23,7 @@ export const usePreviewUploader = ({ orderId }: PreviewUploaderProps) => {
         .remove([fileName]);
 
       // Upload the new file
-      const { error: uploadError, data: uploadData } = await supabase.storage
+      const { error: uploadError } = await supabase.storage
         .from('preview_images')
         .upload(fileName, file, {
           cacheControl: '0',
@@ -43,6 +43,7 @@ export const usePreviewUploader = ({ orderId }: PreviewUploaderProps) => {
 
       console.log("Generated public URL:", publicUrl);
       
+      // Update the order with the new preview URL and status
       const { error: updateError } = await supabase
         .from('orders')
         .update({
