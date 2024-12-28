@@ -145,6 +145,24 @@ export type Database = {
         }
         Returns: string
       }
+      custom_http_post: {
+        Args: {
+          uri: string
+          content: string
+          content_type: string
+        }
+        Returns: Json
+      }
+      custom_http_request: {
+        Args: {
+          method: string
+          uri: string
+          headers?: Json
+          content_type?: string
+          content?: string
+        }
+        Returns: Json
+      }
       http: {
         Args: {
           request: Database["public"]["CompositeTypes"]["http_request"]
