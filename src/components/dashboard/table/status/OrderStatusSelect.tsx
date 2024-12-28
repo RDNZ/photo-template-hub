@@ -31,12 +31,6 @@ export const OrderStatusSelect = ({ orderId, currentStatus }: OrderStatusSelectP
         throw error;
       }
 
-      console.log("Order status updated successfully:", {
-        orderId,
-        oldStatus: currentStatus,
-        newStatus
-      });
-
       // Invalidate queries to refresh the UI
       await queryClient.invalidateQueries({ queryKey: ['adminOrders'] });
       await queryClient.invalidateQueries({ queryKey: ['analytics'] });
