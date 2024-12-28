@@ -18,8 +18,13 @@ export const OrderStatusSelect = ({ orderId, currentStatus }: OrderStatusSelectP
     try {
       const { error } = await supabase
         .from('orders')
-        .update({ status: newStatus })
-        .eq('id', orderId);
+        .update({ 
+          status: newStatus,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', orderId)
+        .select()
+        .single();
 
       if (error) {
         console.error("Error updating order status:", {
