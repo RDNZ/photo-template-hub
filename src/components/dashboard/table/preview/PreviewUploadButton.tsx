@@ -38,7 +38,7 @@ export const PreviewUploadButton = ({ orderId }: PreviewUploadButtonProps) => {
         .remove([fileName]);
 
       // Upload the new file
-      const { error: uploadError, data: uploadData } = await supabase.storage
+      const { error: uploadError } = await supabase.storage
         .from('preview_images')
         .upload(fileName, file, {
           cacheControl: '0',
@@ -58,6 +58,7 @@ export const PreviewUploadButton = ({ orderId }: PreviewUploadButtonProps) => {
 
       console.log("Generated public URL:", publicUrl);
       
+      // Update the order with the new preview URL and status
       const { error: updateError } = await supabase
         .from('orders')
         .update({
@@ -74,7 +75,8 @@ export const PreviewUploadButton = ({ orderId }: PreviewUploadButtonProps) => {
       console.log("Order updated successfully with preview image and status");
       
       // Invalidate queries to refresh the UI
-      queryClient.invalidateQueries({ queryKey: ['adminOrders'] });
+      await queryClient.invalidateQueries({ queryKey: ['adminOrders'] });
+      await queryClient.invalidateQueries({ queryKey: ['clientOrders'] });
       
       toast({
         title: "Success",
