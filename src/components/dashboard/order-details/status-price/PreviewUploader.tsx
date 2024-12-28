@@ -57,11 +57,11 @@ export const usePreviewUploader = ({ orderId }: PreviewUploaderProps) => {
         throw updateError;
       }
 
-      console.log("Order updated successfully with new preview image");
+      console.log("Order updated successfully with preview image");
       
       // Invalidate queries to refresh the UI
-      queryClient.invalidateQueries({ queryKey: ['adminOrders'] });
-      queryClient.invalidateQueries({ queryKey: ['clientOrders'] });
+      await queryClient.invalidateQueries({ queryKey: ['adminOrders'] });
+      await queryClient.invalidateQueries({ queryKey: ['clientOrders'] });
       
       toast({
         title: "Success",
