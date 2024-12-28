@@ -13,7 +13,7 @@ export const OrderStatusSelect = ({ orderId, currentStatus }: OrderStatusSelectP
   const { toast } = useToast();
 
   const handleStatusChange = async (newStatus: string) => {
-    console.log(`Attempting to update order ${orderId} status from ${currentStatus} to ${newStatus}`);
+    console.log(`Updating order ${orderId} status from ${currentStatus} to ${newStatus}`);
 
     try {
       const { error } = await supabase
@@ -22,32 +22,20 @@ export const OrderStatusSelect = ({ orderId, currentStatus }: OrderStatusSelectP
         .eq('id', orderId);
 
       if (error) {
-        console.error("Error updating order status:", {
-          orderId,
-          currentStatus,
-          newStatus,
-          error
-        });
+        console.error("Error updating order status:", error);
         throw error;
       }
 
       // Invalidate queries to refresh the UI
       await queryClient.invalidateQueries({ queryKey: ['adminOrders'] });
-      await queryClient.invalidateQueries({ queryKey: ['analytics'] });
+      await queryClient.invalidateQueries({ queryKey: ['clientOrders'] });
 
       toast({
         title: "Status Updated",
         description: `Order status has been updated to ${newStatus.replace(/_/g, ' ')}`,
       });
     } catch (error: any) {
-      console.error("Error in handleStatusChange:", {
-        orderId,
-        currentStatus,
-        newStatus,
-        error: error.message,
-        details: error
-      });
-      
+      console.error("Failed to update order status:", error);
       toast({
         variant: "destructive",
         title: "Error",
