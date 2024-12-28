@@ -1,4 +1,5 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -8,33 +9,60 @@ interface OrderStatusSelectProps {
 }
 
 export const OrderStatusSelect = ({ orderId, currentStatus }: OrderStatusSelectProps) => {
+  const queryClient = useQueryClient();
   const { toast } = useToast();
 
   const handleStatusChange = async (newStatus: string) => {
     console.log(`Attempting to update order ${orderId} status from ${currentStatus} to ${newStatus}`);
 
     try {
-      const { error } = await supabase
+      // First update the order status
+      const { error: updateError } = await supabase
         .from('orders')
         .update({ status: newStatus })
         .eq('id', orderId);
 
-      if (error) {
+      if (updateError) {
         console.error("Error updating order status:", {
           orderId,
           currentStatus,
           newStatus,
-          error
+          error: updateError
         });
-        throw error;
+        throw updateError;
       }
+
+      // Then fetch the updated order to confirm the change
+      const { data: updatedOrder, error: fetchError } = await supabase
+        .from('orders')
+        .select()
+        .eq('id', orderId)
+        .maybeSingle();
+
+      if (fetchError) {
+        console.error("Error fetching updated order:", {
+          orderId,
+          error: fetchError
+        });
+        throw fetchError;
+      }
+
+      console.log("Order status updated successfully:", {
+        orderId,
+        oldStatus: currentStatus,
+        newStatus: updatedOrder?.status
+      });
+
+      // Invalidate queries to refresh the UI
+      await queryClient.invalidateQueries({ queryKey: ['adminOrders'] });
+      await queryClient.invalidateQueries({ queryKey: ['analytics'] });
 
       toast({
         title: "Status Updated",
-        description: `Order status has been updated to ${newStatus}`,
+        description: `Order status has been updated to ${newStatus.replace(/_/g, ' ')}`,
       });
     } catch (error: any) {
-      console.error("Error updating order status:", {
+      console.error("Error in handleStatusChange:", {
         orderId,
         currentStatus,
         newStatus,
